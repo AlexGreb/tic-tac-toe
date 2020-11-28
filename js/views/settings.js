@@ -1,0 +1,108 @@
+
+const getSettingsScreenElement = () => {
+  const _element = document.createElement(`div`);
+  const template = getSettingsScreenTemplate();
+  _element.innerHTML = template;
+  return _element;
+};
+
+const getSettingsScreenTemplate = () => {
+  return (
+    `<article class="settings-screen">
+    <h1 class="settings-screen__title">
+        Настройки
+    </h1>
+    <section class="settings-screen__choose-character choose-character">
+        <h2 class="choose-character__title">
+            Выберите символ:
+        </h2>
+        <div class="choose-character__characters">
+            <input type="radio"
+                id="x"
+                name="character"
+                class="choose-character__input"
+                checked>
+            <label class="choose-character__x"
+                for="x">
+                <svg x="0px" y="0px" 
+                    height="25"
+                    width="25"
+                    fill="currentColor"
+                    viewBox="0 0 492 492">
+                    <path d="M300.188,246L484.14,62.04c5.06-5.064,7.852-11.82,7.86-19.024c0-7.208-2.792-13.972-7.86-19.028L468.02,7.872
+                        c-5.068-5.076-11.824-7.856-19.036-7.856c-7.2,0-13.956,2.78-19.024,7.856L246.008,191.82L62.048,7.872
+                        c-5.06-5.076-11.82-7.856-19.028-7.856c-7.2,0-13.96,2.78-19.02,7.856L7.872,23.988c-10.496,10.496-10.496,27.568,0,38.052
+                        L191.828,246L7.872,429.952c-5.064,5.072-7.852,11.828-7.852,19.032c0,7.204,2.788,13.96,7.852,19.028l16.124,16.116
+                        c5.06,5.072,11.824,7.856,19.02,7.856c7.208,0,13.968-2.784,19.028-7.856l183.96-183.952l183.952,183.952
+                        c5.068,5.072,11.824,7.856,19.024,7.856h0.008c7.204,0,13.96-2.784,19.028-7.856l16.12-16.116
+                        c5.06-5.064,7.852-11.824,7.852-19.028c0-7.204-2.792-13.96-7.852-19.028L300.188,246z"/>
+                </svg>
+            </label>
+            <input type="radio"
+                id="zero"
+                name="character"
+                class="choose-character__input">
+            <label class="choose-character__zero"
+                for="zero">
+                <svg x="0px" y="0px"
+                    height="25"
+                    width="25"
+                    fill="currentColor"
+                    viewBox="0 0 380.734 380.734">
+                    <path d="M190.367,0C85.23,0,0,85.23,0,190.367s85.23,190.367,190.367,190.367s190.367-85.23,190.367-190.367
+                        S295.504,0,190.367,0z M299.002,298.36c-28.996,28.996-67.57,44.959-108.634,44.959S110.723,327.35,81.733,298.36
+                        c-28.865-28.876-44.769-67.227-44.769-107.993c0-40.771,15.904-79.128,44.769-107.993c28.99-28.996,67.57-44.959,108.634-44.959
+                        c41.054,0,79.639,15.969,108.629,44.959c28.871,28.865,44.763,67.221,44.763,107.993
+                        C343.765,231.133,327.867,269.489,299.002,298.36z"/>
+                </svg>
+            </label>
+        </div>
+    </section>
+    <section class="settings-screen__size-field settings-field">
+        <h2 class="settings-field__title">
+            Выберите размер поля:
+        </h2>
+        <div class="settings-field__size">
+            <label class="settings-field__size-input">
+                <span class="input">
+                    <input
+                        value="3"
+                        min="3" 
+                        max="15"
+                        type="number">
+                </span>
+            </label>
+            <span class="settings-field__cross">X</span>
+            <label class="settings-field__size-input">
+                <span class="input">
+                    <input 
+                        value="3"
+                        min="3"
+                        max="15"
+                        type="number">
+                </span>
+                
+            </label>
+        </div>
+    </section>
+    <section class="settings-screen__start start-block">
+        <h2 class="start-block__title" hidden>Начать игру</h2>
+        <button 
+            class="start-block__btn btn btn--action"
+            type="button">
+            Играть
+        </button>
+    <section>
+</article>`
+  );
+};
+
+const bindSettingsScreen = (_element) => {
+
+};
+
+export {
+  getSettingsScreenElement,
+  getSettingsScreenTemplate,
+  bindSettingsScreen
+};
