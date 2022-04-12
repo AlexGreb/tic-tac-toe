@@ -1,0 +1,248 @@
+/*!**********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./sass/style.scss ***!
+  \**********************************************************************************************************/
+:root {
+  --neon-text-color: #f40;
+}
+
+body {
+  font-family: "Fira Sans Extra Condensed", sans-serif;
+}
+
+/* game */
+.game {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  box-sizing: border-box;
+  margin: 0;
+  background-color: black;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.game > * {
+  flex: 1 0 100%;
+}
+
+/* welcome-screen */
+.welcome-screen {
+  transform: translateY(-50%);
+  text-align: center;
+}
+.welcome-screen__title {
+  font-size: 2.8rem;
+  font-family: "Press Start 2P", cursive;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff, 0 0 2rem var(--neon-text-color), 0 0 4rem var(--neon-text-color), 0 0 6rem var(--neon-text-color), 0 0 8rem var(--neon-text-color), 0 0 10rem var(--neon-text-color);
+  margin-bottom: 5rem;
+}
+.welcome-screen__title span {
+  animation: neon linear infinite 2s;
+}
+
+/* settings-screen */
+.settings-screen__title {
+  text-align: center;
+  font-size: 2.8rem;
+  font-family: "Press Start 2P", cursive;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff, 0 0 2rem var(--neon-text-color), 0 0 4rem var(--neon-text-color), 0 0 6rem var(--neon-text-color), 0 0 8rem var(--neon-text-color), 0 0 10rem var(--neon-text-color);
+  margin-bottom: 5rem;
+}
+.settings-screen__title span {
+  animation: neon linear infinite 2s;
+}
+.settings-screen__size-field {
+  margin-bottom: 50px;
+}
+
+/* choose-character */
+.choose-character__title {
+  color: #fff;
+  font-size: 30px;
+  text-align: center;
+}
+.choose-character__characters {
+  text-align: center;
+}
+.choose-character__input {
+  display: none;
+}
+.choose-character__input:checked + label {
+  border-color: #fff;
+  border-radius: 50%;
+}
+.choose-character__x {
+  display: inline-flex;
+  justify-content: center;
+  align-self: center;
+  border-width: 1px;
+  border-color: transparent;
+  border-style: solid;
+  color: red;
+  padding: 10px;
+  cursor: pointer;
+  margin: 0 15px;
+}
+.choose-character__zero {
+  display: inline-flex;
+  justify-content: center;
+  align-self: center;
+  border-width: 1px;
+  border-color: transparent;
+  border-style: solid;
+  padding: 10px;
+  color: blue;
+  cursor: pointer;
+  margin: 0 15px;
+}
+
+/* settings-field */
+.settings-field__title {
+  color: #fff;
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+.settings-field__size {
+  text-align: center;
+}
+.settings-field__size-input input {
+  width: 50px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.settings-field__cross {
+  display: inline-block;
+  padding: 5px;
+  color: white;
+  font-size: 15px;
+}
+
+/* start-block */
+.start-block {
+  text-align: center;
+}
+
+/* end-screen */
+.end-screen {
+  text-align: center;
+}
+.end-screen__title {
+  font-size: 2.8rem;
+  font-family: "Press Start 2P", cursive;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff, 0 0 2rem var(--neon-text-color), 0 0 4rem var(--neon-text-color), 0 0 6rem var(--neon-text-color), 0 0 8rem var(--neon-text-color), 0 0 10rem var(--neon-text-color);
+  margin-bottom: 5rem;
+}
+.end-screen__congratulations {
+  display: inline-block;
+  margin-bottom: 40px;
+}
+
+/* neon-text */
+@keyframes neon {
+  78% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  79% {
+    color: #0b3960;
+  }
+  80% {
+    text-shadow: none;
+  }
+  81% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  82% {
+    color: #0b3960;
+    text-shadow: none;
+  }
+  83% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+  92% {
+    color: #0b3960;
+    text-shadow: none;
+  }
+  92.5% {
+    color: inherit;
+    text-shadow: inherit;
+  }
+}
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./sass/button.scss ***!
+  \***********************************************************************************************************/
+.btn {
+  display: inline-block;
+  min-width: 180px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 23px;
+  font-family: "Fira Sans Extra Condensed", sans-serif;
+}
+.btn--action {
+  border: none;
+  color: #fff;
+  background: #111;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+}
+.btn:before {
+  content: "";
+  background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing 20s linear infinite;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+}
+.btn:active {
+  color: #000;
+}
+.btn:active:after {
+  background: transparent;
+}
+.btn:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
+@keyframes glowing {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+/*# sourceMappingURL=style.css.map*/

@@ -1,12 +1,8 @@
-import render from '../js/utils/dom/render';
-import {
-  getWelcomeScreenElement,
-  bindWelcomeScreen
-} from '../js/views/welcome';
+import Router from './router.js';
+import '../scss/style.scss';
+import '../scss/button.scss';
 
 window.addEventListener(`load`, () => {
-  const welcomeScreenElement = getWelcomeScreenElement();
-  bindWelcomeScreen(welcomeScreenElement);
-  render(document.body, welcomeScreenElement);
+    Router.showWelcome();
 });
 

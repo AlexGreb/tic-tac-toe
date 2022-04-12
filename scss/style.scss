@@ -6,8 +6,38 @@ body {
     font-family: 'Fira Sans Extra Condensed', sans-serif;
 }
 
+input[type="number"] {
+    background-color: #000;
+    color: #fff;
+    appearance: none;
+    display: inline-block;
+    min-width: 180px;
+    padding: 10px;
+    font-size: 23px;
+    font-family: "Fira Sans Extra Condensed", sans-serif;
+    border: 0;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-family: 'Press Start 2P', cursive;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow:
+    -0.2rem -0.2rem 1rem #fff,
+    0.2rem 0.2rem 1rem #fff,
+    0 0 2rem var(--neon-text-color),
+    0 0 4rem var(--neon-text-color),
+    0 0 6rem var(--neon-text-color),
+    0 0 8rem var(--neon-text-color),
+    0 0 10rem var(--neon-text-color);
+    margin-bottom: 4rem;
+}
+
 /* game */
-.game {
+.tick-tock-toe {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -20,6 +50,8 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    padding-top: 50px;
+    padding-bottom: 50px;
 
     & > * {
         flex: 1 0 100%;
@@ -28,25 +60,25 @@ body {
 
 /* welcome-screen */
 .welcome-screen {
-    transform: translateY(-50%);
+    // transform: translateY(-50%);
     text-align: center;
 
     &__title {
-        font-size: 2.8rem;
-        font-family: 'Press Start 2P', cursive;
-        line-height: 1;
-        text-transform: uppercase;
-        color: #ffffff;
-        text-shadow:
-        -0.2rem -0.2rem 1rem #fff,
-        0.2rem 0.2rem 1rem #fff,
-        0 0 2rem var(--neon-text-color),
-        0 0 4rem var(--neon-text-color),
-        0 0 6rem var(--neon-text-color),
-        0 0 8rem var(--neon-text-color),
-        0 0 10rem var(--neon-text-color);
+        // font-size: 2rem;
+        // font-family: 'Press Start 2P', cursive;
+        // line-height: 1;
+        // text-transform: uppercase;
+        // color: #ffffff;
+        // text-shadow:
+        // -0.2rem -0.2rem 1rem #fff,
+        // 0.2rem 0.2rem 1rem #fff,
+        // 0 0 2rem var(--neon-text-color),
+        // 0 0 4rem var(--neon-text-color),
+        // 0 0 6rem var(--neon-text-color),
+        // 0 0 8rem var(--neon-text-color),
+        // 0 0 10rem var(--neon-text-color);
         
-        margin-bottom: 5rem;
+        // margin-bottom: 5rem;
 
         & span {
             animation: neon linear infinite 2s;
@@ -59,22 +91,22 @@ body {
 /* settings-screen */
 .settings-screen {
     &__title {
-        text-align: center;
-        font-size: 2.8rem;
-        font-family: 'Press Start 2P', cursive;
-        line-height: 1;
-        text-transform: uppercase;
-        color: #ffffff;
-        text-shadow:
-        -0.2rem -0.2rem 1rem #fff,
-        0.2rem 0.2rem 1rem #fff,
-        0 0 2rem var(--neon-text-color),
-        0 0 4rem var(--neon-text-color),
-        0 0 6rem var(--neon-text-color),
-        0 0 8rem var(--neon-text-color),
-        0 0 10rem var(--neon-text-color);
+        // text-align: center;
+        // font-size: 2rem;
+        // font-family: 'Press Start 2P', cursive;
+        // line-height: 1;
+        // text-transform: uppercase;
+        // color: #ffffff;
+        // text-shadow:
+        // -0.2rem -0.2rem 1rem #fff,
+        // 0.2rem 0.2rem 1rem #fff,
+        // 0 0 2rem var(--neon-text-color),
+        // 0 0 4rem var(--neon-text-color),
+        // 0 0 6rem var(--neon-text-color),
+        // 0 0 8rem var(--neon-text-color),
+        // 0 0 10rem var(--neon-text-color);
         
-        margin-bottom: 5rem;
+        // margin-bottom: 5rem;
 
         & span {
             animation: neon linear infinite 2s;
@@ -91,7 +123,7 @@ body {
 .choose-character {
     &__title {
         color: #fff;
-        font-size: 30px;
+        font-size: 25px;
         text-align: center;
     }
 
@@ -141,7 +173,7 @@ body {
 .settings-field {
     &__title {
         color: #fff;
-        font-size: 30px;
+        font-size: 25px;
         text-align: center;
         margin-bottom: 30px;
     }
@@ -178,21 +210,21 @@ body {
     text-align: center;
 
     &__title {
-        font-size: 2.8rem;
-        font-family: 'Press Start 2P', cursive;
-        line-height: 1;
-        text-transform: uppercase;
-        color: #ffffff;
-        text-shadow:
-        -0.2rem -0.2rem 1rem #fff,
-        0.2rem 0.2rem 1rem #fff,
-        0 0 2rem var(--neon-text-color),
-        0 0 4rem var(--neon-text-color),
-        0 0 6rem var(--neon-text-color),
-        0 0 8rem var(--neon-text-color),
-        0 0 10rem var(--neon-text-color);
+        // font-size: 2rem;
+        // font-family: 'Press Start 2P', cursive;
+        // line-height: 1;
+        // text-transform: uppercase;
+        // color: #ffffff;
+        // text-shadow:
+        // -0.2rem -0.2rem 1rem #fff,
+        // 0.2rem 0.2rem 1rem #fff,
+        // 0 0 2rem var(--neon-text-color),
+        // 0 0 4rem var(--neon-text-color),
+        // 0 0 6rem var(--neon-text-color),
+        // 0 0 8rem var(--neon-text-color),
+        // 0 0 10rem var(--neon-text-color);
         
-        margin-bottom: 5rem;
+        // margin-bottom: 5rem;
     }
 
     &__congratulations {
@@ -200,6 +232,26 @@ body {
         margin-bottom: 40px;
     }
 }
+
+.game {
+    display: grid;
+    justify-content: center;
+
+    &__field {
+        display: grid;
+        justify-content: center;
+    }
+
+    canvas {
+        background-color: black;
+        box-shadow: 0 0 15px #ff00b6;
+    }
+}
+
+// #gameCanvas {
+//     background-color: ;
+// }
+
 
 
 /* neon-text */
