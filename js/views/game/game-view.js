@@ -1,14 +1,13 @@
 import AbstractView from '../abstract-view.js';
-import CanvasView from '../common/canvas-view.js'
 
 class GameView extends AbstractView {
 
-    constructor(gameModel) {
+    #gameField = null;
+
+    constructor(fieldSettings) {
         super();
-        this.gameModel = gameModel;
+        this.fieldSettings = fieldSettings;
         this.handleClickCanvas = this.handleClickCanvas.bind(this);
-        this.canvas = new CanvasView(this.gameModel.gameSettings, `game__field`);
-        this.canvasElement = this.canvas.element;
     }
 
     handleClickCanvas(e) {
@@ -16,35 +15,86 @@ class GameView extends AbstractView {
         this.onClickCanvas(e);
     }
 
-    onClickCanvas(e) {
-        console.log(e.clientX, e.clientY);
-        const coords = {
-            x: e.offsetX,
-            y: e.offsetY
-        }
-        this.canvas.findCellForCoord(coords);
-    }
+    onClickCanvas(e) {}
 
-    bind() {
-        this.canvasElement.addEventListener(`click`, this.handleClickCanvas);
+    bind(element) {
+        this.#gameField = element.querySelector(`#gameCanvas`);
+        this.#gameField.addEventListener(`click`, this.handleClickCanvas);
     }
 
     unbind() {
-        this.canvasElement.removeEventListener(`click`, this.handleClickCanvas);
-    }
-
-    postRender() {
-        const gameBlock = this._element.querySelector(`.game`);
-        // gameBlock.appendChild(this.canvasElement);
+        this.#gameField.removeEventListener(`click`, this.handleClickCanvas);
     }
 
     get template() {
         return `
             <article class="game">
                 <h1 class="game__title">Игра</h1>
-                ${this.canvasElement}
+                <canvas id="gameCanvas"></canvas>
             </article>
         `;
+    }
+
+    drawGameField() {
+        const ctx = this.ctx;
+        const cellHeight = this.fieldSettings.cellHeight;
+        const cellWidth = this.fieldSettings.cellWidth;
+        const lineWidth = this.fieldSettings.lineWidth;
+        const width = this.fieldSettings.sizeField.width;
+        const height = this.fieldSettings.sizeField.height;
+        const numbersLines = this.fieldSettings.numbersLines;
+
+        ctx.beginPath();
+        ctx.strokeStyle = 'blue';
+
+        const cellsList = new Array(numbersLines).fill(null);
+
+        cellsList.forEach((curr, i) => {
+            //canvas отрисовывает влево и вправо от заданной точки поэтому рисуем не с нуля
+            const coords = [];
+
+            // горизонтальная отрисовка
+            let indent = (i * lineWidth) + (lineWidth / 2) + (cellWidth * i);
+            ctx.moveTo(0, indent) ;
+            ctx.lineTo(width, indent);
+
+            coords.push(indent + lineWidth);
+
+            // вертикальная отрисовка
+            indent = (i * lineWidth) + (lineWidth / 2) + (cellHeight * i);
+            ctx.moveTo(indent, 0);
+            ctx.lineTo(indent, height);
+
+        });
+
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+
+    drawImgInCell(cell, img, widthImg, heightImg, cellWidth, cellHeight) {
+        const ctx = this.ctx;
+        const x = cell.coords[0];
+        const y = cell.coords[1];
+        let x1 = x[0];
+        let y1 = y[0];
+        if(widthImg < cellWidth) {
+            x1 = x1 + Math.ceil((cellWidth - widthImg) / 2);
+        }
+
+        if(heightImg < cellHeight) {
+            y1 = y1 + Math.ceil((cellHeight - heightImg) / 2);
+        }
+        ctx.drawImage(img, x1, y1, widthImg, heightImg);
+    }
+
+
+    postRender() {
+        this.#gameField.setAttribute(`width`, this.fieldSettings.sizeField.width);
+        this.#gameField.setAttribute(`height`, this.fieldSettings.sizeField.height);
+        this.ctx = this.#gameField.getContext(`2d`);
+        this.ctx.lineWidth = this.fieldSettings.lineWidth;
+        this.drawGameField();
     }
 }
 

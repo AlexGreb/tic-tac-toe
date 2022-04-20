@@ -1,11 +1,11 @@
-import {settingsGameDefault} from '../data/settings.js';
-import {getGameSettings} from '../helpers/helpers.js';
+import {settingsGameDefault, charactersType} from '../data/settings.js';
+import {getObjectFromFormData, getIconPlayerTemplate} from '../helpers/helpers.js';
 import Router from '../router.js';
 
 class SettingsScreen {
     constructor(settingsView, settingsModel) {
         this.settingsModel = new settingsModel({...settingsGameDefault});
-        this.settingsView = new settingsView(this.settingsModel.settings);
+        this.settingsView = new settingsView(this.settingsModel._settings);
         this.settingsView.onSubmitForm = this.saveSettings.bind(this);
     }
 
@@ -13,12 +13,19 @@ class SettingsScreen {
         return this.settingsView.element
     }
 
-    saveSettings(settings) {
-        const gameSettings = getGameSettings(settings);
-        this.settingsModel.fieldSize = gameSettings.fieldSize;
-        this.settingsModel.character = gameSettings.character;
+    
+
+    saveSettings(formData) {
+        const userSettings = Object.freeze(getObjectFromFormData(formData));
+        const settings = {
+            playerCharacter: userSettings.playerCharacter,
+            playerIconTemplate: getIconPlayerTemplate(userSettings.playerCharacter),
+            AIIconTemplate: getIconPlayerTemplate(userSettings.playerCharacter === charactersType.X ? charactersType.O : charactersType.X),
+            numberCellsInRow: Number(userSettings.numberCellsInRow),
+            numbersLines: Number(userSettings.numberCellsInRow) + 1
+        }
         this.settingsView.unbind();
-        Router.showGame(this.settingsModel);
+        Router.showGame(settings);
     }
 
 }

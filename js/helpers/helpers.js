@@ -1,12 +1,20 @@
-import {settingsGameDefault} from '../data/settings.js';
-export const getGameSettings = (settingsFormData) => {
+import {iconO, iconX, charactersType} from "../data/settings";
+
+export const getObjectFromFormData = (settingsFormData) => {
     const settings = {};
-    const keysSettings = Object.keys(settingsGameDefault);
-    for(let key of keysSettings) {
-        const value = settingsFormData.get(key);
-        if(value != null){
-            settings[key] = value;
-        }
+
+    for(let [nameSetting, valueSetting] of settingsFormData) {
+        settings[nameSetting] = valueSetting;
     }
     return settings;
 };
+
+export const getIconPlayerTemplate = (type) => {
+    switch(type) {
+        case charactersType.O: 
+            return iconO;
+
+        default:
+            return iconX;
+    }
+}

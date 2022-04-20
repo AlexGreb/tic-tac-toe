@@ -7,6 +7,7 @@ import GameScreen from './game/game-screen.js';
 import GameView from './views/game/game-view.js';
 import GameModel from './models/game-model.js';
 
+
 const changeView = (html) => {
     document.body.innerHTML = ``;
     document.body.appendChild(html);
@@ -23,9 +24,9 @@ class Router {
         changeView(settingsScreen.element);
     }
 
-    static showGame(gameSettings) {
-        const gameModel = new GameModel(gameSettings.settings);
-        const gameView = new GameView(gameModel);
+    static showGame(settings) {
+        const gameModel = new GameModel(settings);
+        const gameView = new GameView(gameModel.gameFieldSettings);
         const gameScreen = new GameScreen(gameView, gameModel);
         changeView(gameScreen.element)
     }

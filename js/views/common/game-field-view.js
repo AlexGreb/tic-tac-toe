@@ -24,16 +24,8 @@ class CanvasView extends AbstractView {
 
     get template() {
         return `
-            <canvas width="1000" height="1000" id="gameCanvas"></canvas>
+            <canvas id="gameCanvas"></canvas>
         `;
-    }
-
-    get canvasElement() {
-        return this._canvas;
-    }
-
-    getSizeGameField(cellWidth, lineWidth, numberCellsInRow, numbersLines) {
-        return (cellWidth * numberCellsInRow ) + (lineWidth * numbersLines);
     }
 
     drawGameField() {
@@ -72,7 +64,7 @@ class CanvasView extends AbstractView {
         ctx.closePath();
     }
 
-    get getCoordsCells() {
+    get getCoordsCells() {//в презентер
         const numberCellsInRow = this.numberCellsInRow;
         const cellWidth = this.cellWidth;
         const cellHeight = this.cellHeight;
@@ -135,7 +127,7 @@ class CanvasView extends AbstractView {
 
     }
 
-    findCellForCoord (coords) {
+    findCellForCoord (coords) {//в презентер
         const cell = this.cellsCoordsList.find((cell) => {
             const cellCoord = cell.coords;
             const x = cellCoord[0];
