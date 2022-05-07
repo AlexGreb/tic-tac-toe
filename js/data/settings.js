@@ -54,6 +54,14 @@ const characters = [
 
 const settingsFields = [
     {
+        type: `input`,
+        label: `Введите имя:`,
+        name: `playerName`,
+        fieldType: `text`,
+        attrs: `required="required" placeholder="Введите имя"`,
+        value: ``,
+    },
+    {
         type: `radio`,
         label: `Выберите символ:`,
         items: characters,
@@ -68,11 +76,28 @@ const settingsFields = [
         attrs: `min="3" max="15"`,
         value: fieldSize,
     }
-
 ];
 
 export const settingsGameDefault = {
     character: `X`,
     fieldSize: fieldSize,
     settingsFields: settingsFields
+};
+
+export const gameMode = {
+    CREATE_GAME: `CREATE_GAME`,
+    DEVICE: `device`
+}
+
+export const serverName = `ws://192.168.1.49:9000/`;
+
+export const serverActions = {
+    FIND_GAME: `FIND_GAME`,
+    CREATE_GAME: `CREATE_GAME`,
+    ACCEPT_OFFER: `ACCEPT_OFFER`,
+    ACCEPT_ANSWER: `ACCEPT_ANSWER`,
+    ICE_CANDIDATE: `ICE_CANDIDATE`,
+    USER: `USER`,
+    OFFER: `OFFER`,
+    ANSWER: `ANSWER`
 };

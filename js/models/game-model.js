@@ -16,6 +16,7 @@ class GameModel {
         this.#numbersLines = settings.numbersLines;
         this.#numberCellsInRow = settings.numberCellsInRow;
         this.playerIconTemplate = settings.playerIconTemplate;
+        this.playerName = settings.playerName;
         this.AIIconTemplate = settings.AIIconTemplate;
         this.#isMovePlayer = settings.playerCharacter === charactersType.X;
     }

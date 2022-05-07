@@ -1,6 +1,6 @@
 import AbstractView from '../abstract-view.js';
 import getCharactersListTemplate from '../../templates/characters-list.js';
-// import {characters} from '../../data/settings.js';
+import {gameMode} from '../../data/settings.js';
 
 
 class SettingsView extends AbstractView {
@@ -16,8 +16,10 @@ class SettingsView extends AbstractView {
 
     onSaveSettings(e) {
         e.preventDefault();
+        console.log(e.submitter);
+        const mode = e.submitter.classList.contains(`js-start-game-network-btn`) ? gameMode.CREATE_GAME : typeGame.DEVICE;
         const formData = new FormData(this.#form);
-        this.onSubmitForm(formData, this.#form.elements);
+        this.onSubmitForm(formData, mode);
     }
 
 
@@ -73,9 +75,16 @@ class SettingsView extends AbstractView {
                     ${this.renderFormFields(this.settings.settingsFields).trim()}
                     <section class="settings-screen__start start-block">
                         <h2 class="start-block__title" hidden>Начать игру</h2>
-                        <button class="start-block__btn btn btn--action">
-                            Играть
-                        </button>
+                        <div class="start-block__create-network-game-btn-wrap">
+                            <button class="js-start-game-network-btn btn btn--action">
+                                Создать игру
+                            </button>
+                        </div>
+                        <div>
+                            <button class="start-block__btn btn btn--action">
+                                Играть
+                            </button>
+                        </div>
                     <section>
                 </form>
             </article>`);

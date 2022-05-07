@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "The game tick tock toe",
     "main": "./js/main.js",
+    "type": "module",
     "devDependencies": {
         "@babel/core": "7.14.8",
         "@babel/plugin-syntax-jsx": "7.14.5",
@@ -30,7 +31,7 @@
         "webpack-dev-server": "4.7.2"
     },
     "scripts": {
-        "start": "webpack serve --mode development",
+        "start": "webpack serve --host local-ip --mode development",
         "build": "webpack --mode production",
         "test": "npm run eslint && jest --detectOpenHandles --env=jsdom"
     },
@@ -43,5 +44,8 @@
     "bugs": {
         "url": "https://github.com/AlexGreb/what-to-watch/issues"
     },
-    "homepage": "https://github.com/AlexGreb/what-to-watch#readme"
+    "homepage": "https://github.com/AlexGreb/what-to-watch#readme",
+    "dependencies": {
+        "body-parser": "^1.20.0"
+    }
 }

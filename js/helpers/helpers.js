@@ -1,4 +1,4 @@
-import {iconO, iconX, charactersType} from "../data/settings";
+import {iconO, iconX, charactersType} from '../data/settings.js';
 
 export const getObjectFromFormData = (settingsFormData) => {
     const settings = {};
