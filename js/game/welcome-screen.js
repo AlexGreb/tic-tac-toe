@@ -8,19 +8,8 @@ class WelcomeScreen {
         this.welcomeView = new welcomeView();
         this.welcomeView.onBtnStart = this.startGame.bind(this);
         this.welcomeView.onFindGame = this.onFindGame.bind(this);
+
         this.connection = new RTSConnector();
-
-        this.pendingLocalIceCondidateList = [];
-
-        this.welcomeView.onCreateOffer = this.createOffer.bind(this);
-        this.welcomeView.onAcceptOffer = this.acceptOffer.bind(this);
-        this.welcomeView.onCreateAnswer = this.createAnswer.bind(this);
-        this.welcomeView.onSentData = this.onSentData.bind(this);
-
-
-        this.connection.onSendIceCandidate = (candidate) => {
-            this.pendingLocalIceCondidateList.push(candidate);
-        };
     };
 
     get element() {
@@ -49,7 +38,7 @@ class WelcomeScreen {
                     type: serverActions.ICE_CANDIDATE,
                     payload: {
                         clientId: this.iniciatorId,
-                        iceCondidateList: this.pendingLocalIceCondidateList
+                        iceCondidateList: this.connection.iceCandidateList
                     }
                 });
             }

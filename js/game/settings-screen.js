@@ -11,7 +11,6 @@ class SettingsScreen {
         this.settingsView = new settingsView(this.settingsModel._settings);
         this.settingsView.onSubmitForm = this.saveSettings.bind(this);
         this.onOpenWSConnection = this.onOpenWSConnection.bind(this);
-        this.pendingLocalIceCondidateList = [];
     }
 
     get element() {
@@ -68,9 +67,6 @@ class SettingsScreen {
                 data.payload.iceCondidateList.forEach((candidate) => {
                     this.connection.addIceCandidate(candidate);
                 });
-                // setTimeout(() => {
-                //     this.connection.sendData('123');
-                // }, 1000);
                 
             }
 
@@ -83,7 +79,7 @@ class SettingsScreen {
                         type: serverActions.ICE_CANDIDATE,
                         payload: {
                             clientId: this.recepientId,
-                            iceCondidateList: this.pendingLocalIceCondidateList
+                            iceCondidateList: this.connection.iceCandidateList
                         }
                     });
                 });

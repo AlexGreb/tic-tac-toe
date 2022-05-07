@@ -101,3 +101,13 @@ export const serverActions = {
     OFFER: `OFFER`,
     ANSWER: `ANSWER`
 };
+
+export const rtcEvents = {
+    DATA_CHANNEL: `dataChannel`,
+    CONNECTION_STATE_CHANGE: `connectionStateChange`,
+    ICE_CONDIDATE: `iceCondidate`,
+    ICE_CONNECTION_STATE_CHANGE: `iceConnectionStateChange`,
+    OPEN_DATA_CHANNEL: `openDataChannel`,
+    CLOSE_DATA_CHANNEL: `closeDataChannel`,
+    MESSAGE_DATA_CHANNEL: `messageDataChannel`
+};

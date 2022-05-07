@@ -1,4 +1,4 @@
-import EventEmitter from '../utils/dom/event-emmiter.js';
+import EventEmitter from '../utils/event-emmiter.js';
 
 class WebSocketConnector extends EventEmitter {
     constructor(server) {
@@ -16,19 +16,19 @@ class WebSocketConnector extends EventEmitter {
         this.socket.send(JSON.stringify(data));
     }
 
-    onOpen(e) {
+    onOpen = (e) => {
         alert("[open] Соединение установлено");
         alert("Отправляем данные на сервер");
         // this.socket.send("Меня зовут Джон");
         this.emit(`open`, e); // в константу
     }
 
-    onMessage(event) {
+    onMessage = (event) => {
         const data = JSON.parse(event.data);
         this.emit(`message`, data); // в константу
     }
 
-    onClose = function(event) {
+    onClose = (event) => {
         if (event.wasClean) {
           alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
         } else {
@@ -39,7 +39,7 @@ class WebSocketConnector extends EventEmitter {
         this.emit(`close`, event); // в константу
     };
       
-    onError(error) {
+    onError = (error) => {
         alert(`[error] ${error.message}`);
         this.emit(`error`, error); // в константу
 

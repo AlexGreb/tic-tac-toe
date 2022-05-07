@@ -1,82 +1,75 @@
-class RTSConnector {
+import EventEmitter from '../utils/event-emmiter.js';
+import {rtcEvents} from '../data/settings.js';
+
+class RTSConnector extends EventEmitter {
     #channel = null;
+    #localIceCondidateList = [];
+    #peerConnection = null;
+
+
+    onOpenDataChannel = () => {
+        this.#channel.send('Hi you!');
+    }
+
+    onCloseDataChannel = () => {
+        this.#channel.send('Bay');
+    }
+
+    onMessageDataChannel = (e) => {
+        alert(e.data)
+    }
 
     constructor() {
-        // { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }
-        // { 
-        //     iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
-        //     iceTransportPolicy: 'all',
-        //     ceCandidatePoolSize: '0'
-        // }
-        this.connection = new RTCPeerConnection();
-
-        this.onIceCandidate = this.onIceCandidate.bind(this);
-        this.onDataChannel = this.onDataChannel.bind(this);
-        this.onConnectionStateChange = this.onConnectionStateChange.bind(this);
-        this.onIceConnectionStateChange = this.onIceConnectionStateChange.bind(this);
-
-
-        this.connection.addEventListener(`datachannel`, this.onDataChannel);
-        this.connection.addEventListener(`connectionstatechange`, this.onConnectionStateChange);
-        this.connection.addEventListener(`icecandidate`, this.onIceCandidate);
-        this.connection.addEventListener(`iceconnectionstatechange`, this.onIceConnectionStateChange);
-
-        this.onMessage = this.onMessage.bind(this);
-        this.onOpenChannel = this.onOpenChannel.bind(this);
-        this.onCloseChannel = this.onCloseChannel.bind(this);
-
+        super();
+        this.#peerConnection  = new RTCPeerConnection();
+        this.#peerConnection.addEventListener(`datachannel`, this.onDataChannel);
+        this.#peerConnection.addEventListener(`connectionstatechange`, this.onConnectionStateChange);
+        this.#peerConnection.addEventListener(`icecandidate`, this.onIceCandidate);
+        this.#peerConnection.addEventListener(`iceconnectionstatechange`, this.onIceConnectionStateChange);
     }
 
-    onAddStrem() {
-        console.log("pc_onaddstream()");
+    get iceCandidateList() {
+        return this.#localIceCondidateList;
     }
 
-    async onIceCandidate(event) {
+    onIceCandidate = async (event) => {
         if (event.candidate) {
-            console.log('Send my ICE-candidate: ' + event.candidate.candidate, 'gray');
-            this.sendIceCandidate(event.candidate);
+            this.#localIceCondidateList.push(event.candidate);
           } else {
             console.log('No more candidates', 'gray');
         }
-
+        this.emit(rtcEvents.ICE_CONDIDATE, event.candidate);
     }
 
-    sendIceCandidate(candidate){
-        this.onSendIceCandidate(candidate);
-    };
 
-    onOpenChannel() {
+    onOpenDataChannel = () => {
         this.#channel.send('Hi you!');
     }
 
-    onCloseChannel() {
-        this.#channel.send('Hi you!');
+    onCloseDataChannel = () => {
+        this.#channel.send('Bay');
+    }
+
+    onMessageDataChannel = (e) => {
+        alert(e.data)
+    }
+
+    createDataChannel(name) {
+        this.#channel = this.#peerConnection.createDataChannel(name);
+        this.#channel.onopen = this.onOpenDataChannel;
+        this.#channel.onclose = this.onCloseDataChannel;
+        this.#channel.addEventListener(`message`, this.onMessageDataChannel);
     }
 
     async createOffer() {
-        this.#channel = this.connection.createDataChannel(`gomoku`);
-
-        this.onOpenChannel = this.onOpenChannel.bind(this);
-        this.onCloseChannel = this.onCloseChannel.bind(this);
-
-        this.#channel.onopen = this.onOpenChannel;
-        this.#channel.onclose = this.onCloseChannel;
-
-        this.#channel.addEventListener(`message`, (e) => {
-            alert(e.data)
-        });
-
-        const offer = await this.connection.createOffer();
-        await this.connection.setLocalDescription(offer);
+        this.createDataChannel(`gomoku`);
+        const offer = await this.#peerConnection.createOffer();
+        await this.#peerConnection.setLocalDescription(offer);
         return offer;
-
-        // Когда дальняя сторона пришлет свой Answer SDP, его нужно будет задать методом setRemoteDescription 
-        // Пока вторая сторона не реализована, ничего не делаем
-        // pc2_receivedOffer(desc);
     }
 
     async createAnswer() {
-        this.connection.addEventListener(`icecandidate`, (event) => {
+        this.#peerConnection.addEventListener(`icecandidate`, (event) => {
 
           // console.log('onicecandidate', event)
           if (!event.candidate) {
@@ -84,54 +77,46 @@ class RTSConnector {
           }
         })
 
-        const answer = await this.connection.createAnswer();
-        await this.connection.setLocalDescription(answer);
+        const answer = await this.#peerConnection.createAnswer();
+        await this.#peerConnection.setLocalDescription(answer);
         return answer;
     }
 
 
-    onDataChannel(e) {
-        // console.log(e);
+    onDataChannel = (e) => {
         this.#channel = e.channel;
-        // channel.onopen = event => console.log('onopen', event);
-        // channel.onmessage = event => console.log('onmessage', event);
-
         this.#channel.onmessage = this.onMessage;
+
+        this.emit(rtcEvents.DATA_CHANNEL, e);
     }
 
-    onConnectionStateChange(e) {
-        console.log(this.connection.connectionState);
+    onConnectionStateChange = (e) => {
+        this.emit(rtcEvents.CONNECTION_STATE_CHANGE, this.#peerConnection.connectionState);
     }
 
-    onMessage(e) {
+    onMessage = (e) => {
         alert(e.data)
     }
 
-    onIceConnectionStateChange(e) {
-        console.log(this.connection.iceConnectionState)
+    onIceConnectionStateChange = (e) => {
+        this.emit(rtcEvents.ICE_CONNECTION_STATE_CHANGE, this.#peerConnection.iceConnectionState);
     }
 
     async acceptRemoteOffer(offer) {
-        console.log(`accept offer`);
-        return await this.connection.setRemoteDescription(offer);
+        return await this.#peerConnection.setRemoteDescription(offer);
     }
 
     async acceptAnswer(answer) {
-        // const answer = JSON.parse(document.getElementById('remoteAnswer').value)
-        console.log(`accept answer`);
-        return await this.connection.setRemoteDescription(answer)
+        return await this.#peerConnection.setRemoteDescription(answer)
     }
 
     async sendData(data) {
-        // const text = document.getElementById('text').value
-
         this.#channel.send(data);
     }
 
     addIceCandidate(candidate) {
-        this.connection.addIceCandidate(candidate);
+        this.#peerConnection.addIceCandidate(candidate);
     }
-
 }
 
 export default RTSConnector;
