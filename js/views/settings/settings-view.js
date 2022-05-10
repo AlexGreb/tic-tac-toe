@@ -16,8 +16,7 @@ class SettingsView extends AbstractView {
 
     onSaveSettings(e) {
         e.preventDefault();
-        console.log(e.submitter);
-        const mode = e.submitter.classList.contains(`js-start-game-network-btn`) ? gameMode.CREATE_GAME : typeGame.DEVICE;
+        const mode = e.submitter.classList.contains(`js-start-game-network-btn`) ? gameMode.NETWORK : gameMode.DEVICE;
         const formData = new FormData(this.#form);
         this.onSubmitForm(formData, mode);
     }

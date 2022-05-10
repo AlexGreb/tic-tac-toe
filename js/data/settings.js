@@ -85,29 +85,38 @@ export const settingsGameDefault = {
 };
 
 export const gameMode = {
-    CREATE_GAME: `CREATE_GAME`,
+    NETWORK: `network`,
     DEVICE: `device`
 }
 
 export const serverName = `ws://192.168.1.49:9000/`;
 
-export const serverActions = {
+export const messageType = {
     FIND_GAME: `FIND_GAME`,
     CREATE_GAME: `CREATE_GAME`,
     ACCEPT_OFFER: `ACCEPT_OFFER`,
     ACCEPT_ANSWER: `ACCEPT_ANSWER`,
     ICE_CANDIDATE: `ICE_CANDIDATE`,
-    USER: `USER`,
+    INIT_USER: `USER`,
     OFFER: `OFFER`,
-    ANSWER: `ANSWER`
+    ANSWER: `ANSWER`,
+    SETTINGS: `SETTINGS`,
+    START: `START`,
+    MOVE: `MOVE`
 };
 
-export const rtcEvents = {
+export const peerEvents = {
     DATA_CHANNEL: `dataChannel`,
     CONNECTION_STATE_CHANGE: `connectionStateChange`,
     ICE_CONDIDATE: `iceCondidate`,
     ICE_CONNECTION_STATE_CHANGE: `iceConnectionStateChange`,
     OPEN_DATA_CHANNEL: `openDataChannel`,
     CLOSE_DATA_CHANNEL: `closeDataChannel`,
-    MESSAGE_DATA_CHANNEL: `messageDataChannel`
+    MESSAGE_DATA_CHANNEL: `messageDataChannel`,
+    CLOSE_DATA_CHANNEL: `closeDataChannel`,
 };
+
+export const playerType = {
+    INICIATOR: `iniciator`,
+    RECIPIENT: `recipient`
+}

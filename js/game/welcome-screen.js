@@ -1,87 +1,71 @@
 import Router from '../router.js';
-import RTSConnector from '../network/rtc-connector.js';
-import WebSocketConnector from '../network/websocket.js';
-import {serverName, serverActions} from '../data/settings.js';
+import PeerConnector from '../network/peer-connector.js';
+// import WebSocketConnector from '../network/websocket.js';
+// import {serverName, messageType, gameMode} from '../data/settings.js';
+import {gameMode} from '../data/settings.js';
 
 class WelcomeScreen {
+    // #peerConnection = null;
+
     constructor(welcomeView) {
         this.welcomeView = new welcomeView();
-        this.welcomeView.onBtnStart = this.startGame.bind(this);
-        this.welcomeView.onFindGame = this.onFindGame.bind(this);
+        this.welcomeView.onBtnStart = this.startGame;
+        this.welcomeView.onFindGame = this.onFindGame;
 
-        this.connection = new RTSConnector();
+        // this.#peerConnection = new PeerConnector();
     };
 
     get element() {
         return this.welcomeView.element;
     }
 
-    startGame() {
+    startGame = () => {
         this.welcomeView.unbind();
         Router.showSettings();
     }
 
-    onFindGame() {
-        this.ws = new WebSocketConnector(`${serverName}?findGame=true`);
+    onFindGame = () => {
+        Router.showGame({
+            gameMode: gameMode.NETWORK
+        })
 
-        this.ws.subscribe(`message`, (data) => {
-            if(data.type === serverActions.USER) {
-                this.recipientId = data.payload.clientId;
-            }
+        // this.ws = new WebSocketConnector(`${serverName}?findGame=true`);
 
-            if(data.type === serverActions.ICE_CANDIDATE) {
-                data.payload.iceCondidateList.forEach((candidate) => {
-                    this.connection.addIceCandidate(candidate);
-                });
+        // this.ws.subscribe(`message`, (data) => {
+        //     if(data.type === messageType.INIT_USER) {
+        //         this.recipientId = data.payload.clientId;
+        //     }
 
-                this.ws.send({
-                    type: serverActions.ICE_CANDIDATE,
-                    payload: {
-                        clientId: this.iniciatorId,
-                        iceCondidateList: this.connection.iceCandidateList
-                    }
-                });
-            }
+        //     if(data.type === messageType.ICE_CANDIDATE) {
+        //         data.payload.iceCondidateList.forEach((candidate) => {
+        //             this.#peerConnection.addIceCandidate(candidate);
+        //         });
 
-            if(data.type === serverActions.OFFER) {
-                this.iniciatorId = data.payload.iniciatorId;
-                this.connection.acceptRemoteOffer(data.payload.offer).then(() => {
-                    this.connection.createAnswer().then((answer) => {
-                        this.ws.send({
-                            type: serverActions.ANSWER,
-                            payload: {
-                                iniciatorId: this.iniciatorId,
-                                recipientId: this.recipientId,
-                                answer
-                            }
-                        });
-                    })
-                });
-            }
-        });
-    }
+        //         this.ws.send({
+        //             type: messageType.ICE_CANDIDATE,
+        //             payload: {
+        //                 clientId: this.iniciatorId,
+        //                 iceCondidateList: this.#peerConnection.iceCandidateList
+        //             }
+        //         });
+        //     }
 
-
-    createOffer() {
-        this.connection.createOffer()
-            .then((offer) => {
-                this.welcomeView.showOffer(JSON.stringify(offer));
-            });
-    }
-
-    acceptOffer(offer) {
-        this.connection.acceptRemoteOffer(offer);
-    }
-
-    createAnswer() {
-        this.connection.createAnswer()
-            .then((answer) => {
-                this.welcomeView.showAnswer(JSON.stringify(answer));
-            });
-    }
-
-    onSentData(data) {
-        this.connection.sendData(data);
+        //     if(data.type === messageType.OFFER) {
+        //         this.iniciatorId = data.payload.iniciatorId;
+        //         this.#peerConnection.acceptRemoteOffer(data.payload.offer).then(() => {
+        //             this.#peerConnection.createAnswer().then((answer) => {
+        //                 this.ws.send({
+        //                     type: messageType.ANSWER,
+        //                     payload: {
+        //                         iniciatorId: this.iniciatorId,
+        //                         recipientId: this.recipientId,
+        //                         answer
+        //                     }
+        //                 });
+        //             })
+        //         });
+        //     }
+        // });
     }
 }
 

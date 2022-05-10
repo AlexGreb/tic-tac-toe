@@ -15,10 +15,11 @@ class GameModel {
     constructor(settings) {
         this.#numbersLines = settings.numbersLines;
         this.#numberCellsInRow = settings.numberCellsInRow;
-        this.playerIconTemplate = settings.playerIconTemplate;
+        this.playerIconTemplate = settings.player1IconTemplate;
         this.playerName = settings.playerName;
-        this.AIIconTemplate = settings.AIIconTemplate;
-        this.#isMovePlayer = settings.playerCharacter === charactersType.X;
+        this.AIIconTemplate = settings.player2IconTemplate;
+        this.#isMovePlayer = settings.player1Character === charactersType.X;
+        this.#cellsCoordsList = this.coordsCells;
     }
 
     get cellWidth() {
@@ -45,7 +46,7 @@ class GameModel {
         this.#isMovePlayer = !this.#isMovePlayer;
     }
 
-    get playerImage() {
+    get player1Image() {
         if(this.#playerImage) {
             return Promise.resolve(this.#playerImage);
         }
@@ -56,7 +57,7 @@ class GameModel {
         });
     }
 
-    get AIImage() {
+    get player2Image() {
         if(this.#AIImage) {
             return Promise.resolve(this.#AIImage);
         }
@@ -108,8 +109,7 @@ class GameModel {
             };
         }, startCoords);
 
-        this.#cellsCoordsList = cellsCoordsList;
-        return this.#cellsCoordsList;
+        return cellsCoordsList;
     }
 
     get sizeGameField() {

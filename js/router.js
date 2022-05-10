@@ -4,9 +4,6 @@ import WelcomeScreen from './game/welcome-screen.js';
 import SettingsScreen from './game/settings-screen.js';
 import SettingsModel from './models/settings-model.js';
 import GameScreen from './game/game-screen.js';
-import GameView from './views/game/game-view.js';
-import GameModel from './models/game-model.js';
-
 
 const changeView = (html) => {
     document.body.innerHTML = ``;
@@ -24,11 +21,16 @@ class Router {
         changeView(settingsScreen.element);
     }
 
-    static showGame(settings) {
-        const gameModel = new GameModel(settings);
-        const gameView = new GameView(gameModel.gameFieldSettings);
-        const gameScreen = new GameScreen(gameView, gameModel);
-        changeView(gameScreen.element)
+    static showGame = async (gameSettings) => {
+        // const gameModel = new GameModel(gameSettings);
+        // const gameView = new GameView(gameModel.gameFieldSettings);
+        // const gameScreen = new GameScreen(gameView, gameModel);
+        const start = (element) => {
+            changeView(element)
+        };
+
+        const gameScreen = await new GameScreen(gameSettings, start);
+        
     }
 }
 

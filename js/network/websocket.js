@@ -1,15 +1,20 @@
 import EventEmitter from '../utils/event-emmiter.js';
 
 class WebSocketConnector extends EventEmitter {
-    constructor(server) {
+    constructor() {
         super();
+    }
+
+    create(server) {
         this.socket = new WebSocket(server);
-        this.onOpen = this.onOpen.bind(this);
-        this.onMessage = this.onMessage.bind(this);
         this.socket.onopen = this.onOpen;
         this.socket.onmessage = this.onMessage;
         this.socket.onclose = this.onClose;
         this.socket.onerror = this.onError;
+    }
+
+    close(clientId) {
+        this.socket.close();
     }
 
     send(data) {
@@ -17,9 +22,6 @@ class WebSocketConnector extends EventEmitter {
     }
 
     onOpen = (e) => {
-        alert("[open] Соединение установлено");
-        alert("Отправляем данные на сервер");
-        // this.socket.send("Меня зовут Джон");
         this.emit(`open`, e); // в константу
     }
 
