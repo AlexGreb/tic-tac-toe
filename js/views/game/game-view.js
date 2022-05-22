@@ -1,21 +1,22 @@
 import AbstractView from '../abstract-view.js';
 
+export const gameViewEvents = {
+    CLICK_GAME_FIELD: `clickGameField`,
+};
+
 class GameView extends AbstractView {
 
     #gameField = null;
 
     constructor(fieldSettings) {
         super();
-        this.fieldSettings = fieldSettings;
-        this.handleClickCanvas = this.handleClickCanvas.bind(this);
+        this.fieldSettings = fieldSettings;;
     }
 
-    handleClickCanvas(e) {
+    handleClickCanvas = (e) => {
         e.preventDefault();
-        this.onClickCanvas(e);
+        this.emit(gameViewEvents.CLICK_GAME_FIELD, e);
     }
-
-    onClickCanvas(e) {}
 
     bind(element) {
         this.#gameField = element.querySelector(`#gameCanvas`);

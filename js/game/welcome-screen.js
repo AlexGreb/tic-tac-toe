@@ -1,71 +1,65 @@
 import Router from '../router.js';
-import PeerConnector from '../network/peer-connector.js';
-// import WebSocketConnector from '../network/websocket.js';
-// import {serverName, messageType, gameMode} from '../data/settings.js';
-import {gameMode} from '../data/settings.js';
+import WelcomeView, {welcomeViewEvents} from '../views/welcome/welcome-view.js';
+import {
+    gameMode,
+    socketGetParams,
+    messageType,
+    serverName
+} from '../data/settings.js';
+import {createMessage} from '../helpers/helpers.js';
+import WebSocketConnector from '../network/websocket.js';
+import PeerConnector, {peerConnectorEvents} from '../network/peer-connector.js';
 
 class WelcomeScreen {
-    // #peerConnection = null;
+    #peerConnection = null;
+    #socket = null;
 
-    constructor(welcomeView) {
-        this.welcomeView = new welcomeView();
-        this.welcomeView.onBtnStart = this.startGame;
-        this.welcomeView.onFindGame = this.onFindGame;
-
-        // this.#peerConnection = new PeerConnector();
+    constructor() {
+        this.welcomeView = new WelcomeView();
+        this.welcomeView.subscribe(welcomeViewEvents.START_GAME, this.startOfflineGame);
+        this.welcomeView.subscribe(welcomeViewEvents.FIND_GAME, this.findOnlineGame);
+        this.welcomeView.subscribe(welcomeViewEvents.CREATE_GAME, this.createOnlineGame);
     };
 
     get element() {
         return this.welcomeView.element;
     }
 
-    startGame = () => {
-        this.welcomeView.unbind();
-        Router.showSettings();
+    onMessageDataChannel = (message) => {
+        if(message.type === messageType.SETTINGS) {
+            this.gameSettings = message.payload.gameSettings;
+            this.#peerConnection.sendData(createMessage(messageType.START));
+        }
+
+        if(message.type === messageType.START) {
+            this.unsubscribeMessageDataChannel();
+            this.welcomeView.unbind();
+            Router.showGame(this.gameSettings, this.#peerConnection);
+        }
+     }
+
+    startOfflineGame = () => {
+        Router.showGameSettings(gameMode.OFFLINE);
     }
 
-    onFindGame = () => {
-        Router.showGame({
-            gameMode: gameMode.NETWORK
-        })
+    createConnection = () => {
+        // TODO вынести куда то так используется в settings-screen
+        // создаем P2P соединение затем получаем настройки и запускаем игру
+        this.#socket = new WebSocketConnector();
+        this.#peerConnection = new PeerConnector(this.#socket, false);
+        this.#peerConnection.create();
+        this.#socket.create(`${serverName}?${socketGetParams.FIND_GAME}`);
+        this.unsubscribeMessageDataChannel = this.#peerConnection.subscribe(peerConnectorEvents.MESSAGE_DATA_CHANNEL, this.onMessageDataChannel);
+    }
 
-        // this.ws = new WebSocketConnector(`${serverName}?findGame=true`);
+    findOnlineGame = () => {
+        this.welcomeView.showFindGameModal();
+        this.createConnection();
+    }
 
-        // this.ws.subscribe(`message`, (data) => {
-        //     if(data.type === messageType.INIT_USER) {
-        //         this.recipientId = data.payload.clientId;
-        //     }
-
-        //     if(data.type === messageType.ICE_CANDIDATE) {
-        //         data.payload.iceCondidateList.forEach((candidate) => {
-        //             this.#peerConnection.addIceCandidate(candidate);
-        //         });
-
-        //         this.ws.send({
-        //             type: messageType.ICE_CANDIDATE,
-        //             payload: {
-        //                 clientId: this.iniciatorId,
-        //                 iceCondidateList: this.#peerConnection.iceCandidateList
-        //             }
-        //         });
-        //     }
-
-        //     if(data.type === messageType.OFFER) {
-        //         this.iniciatorId = data.payload.iniciatorId;
-        //         this.#peerConnection.acceptRemoteOffer(data.payload.offer).then(() => {
-        //             this.#peerConnection.createAnswer().then((answer) => {
-        //                 this.ws.send({
-        //                     type: messageType.ANSWER,
-        //                     payload: {
-        //                         iniciatorId: this.iniciatorId,
-        //                         recipientId: this.recipientId,
-        //                         answer
-        //                     }
-        //                 });
-        //             })
-        //         });
-        //     }
-        // });
+    createOnlineGame = () => {
+        this.welcomeView.unbind();
+        Router.showGameSettings(gameMode.ONLINE);
     }
 }
 

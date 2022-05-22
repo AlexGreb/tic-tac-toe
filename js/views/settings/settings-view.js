@@ -1,24 +1,48 @@
 import AbstractView from '../abstract-view.js';
 import getCharactersListTemplate from '../../templates/characters-list.js';
 import {gameMode} from '../../data/settings.js';
+import Loader from '../common/loader.js';
+import Modal from 'modal-vanilla';
+import '../../../scss/modal.scss';
 
+export const settingsViewEvents = {
+    SAVE_SETTINGS: `saveSettings`,
+}
 
 class SettingsView extends AbstractView {
     #form = null;
 
     constructor(settings) {
         super();
+
         this.settings = settings;
         this.onSaveSettings = this.onSaveSettings.bind(this);
     }
 
-    onSubmitForm() {};
+    showCreateGameModal = () => {
+        this.loader = new Loader(`Ищем соперника...`);
+        const modalContent = this.loader.element;
+        this.createGameModal = new Modal({
+            content: modalContent,
+            footer: false,
+            header: false,
+            backdrop: `static`
+        });
+        this.createGameModal.show();
+    };
+
+    hideCreateGameModal = () => {
+        this.createGameModal.hide();
+    }
 
     onSaveSettings(e) {
         e.preventDefault();
-        const mode = e.submitter.classList.contains(`js-start-game-network-btn`) ? gameMode.NETWORK : gameMode.DEVICE;
+        const mode = e.submitter.classList.contains(`js-start-game-network-btn`) ? gameMode.ONLINE : gameMode.OFFLINE;
         const formData = new FormData(this.#form);
-        this.onSubmitForm(formData, mode);
+        this.emit(settingsViewEvents.SAVE_SETTINGS, {
+            formData,
+            gameMode: mode
+        });
     }
 
 
@@ -64,6 +88,10 @@ class SettingsView extends AbstractView {
         }).join(``);
     }
 
+    renderBtn() {
+
+    }
+
     get template() {
         return (
             `<article class="settings-screen">
@@ -74,9 +102,10 @@ class SettingsView extends AbstractView {
                     ${this.renderFormFields(this.settings.settingsFields).trim()}
                     <section class="settings-screen__start start-block">
                         <h2 class="start-block__title" hidden>Начать игру</h2>
+                        ${this.renderBtn(this.settings.gameMode)}
                         <div class="start-block__create-network-game-btn-wrap">
                             <button class="js-start-game-network-btn btn btn--action">
-                                Создать игру
+                                Создать
                             </button>
                         </div>
                         <div>

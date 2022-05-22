@@ -79,9 +79,9 @@ function onConnect(wsClient, req) {
           }
     });
     wsClient.on('close', (e) => {
-        for(let {client} of wsClients.values()) {
-            if(client === wsClient) {
-                wsClients.delete(wsClient);
+        for(let [id, clientData] of wsClients) {
+            if(clientData.client === wsClient) {
+                wsClients.delete(id);
                 break;
             }
         }

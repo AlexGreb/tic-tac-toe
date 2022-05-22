@@ -1,12 +1,13 @@
-import {charactersType} from '../data/settings.js';
+import {charactersType, gameMode} from '../data/settings.js';
+import {getImageFromSVGString, getImagePlayer} from '../helpers/helpers.js';
 
 class GameModel {
     #numbersLines = null;
     #numberCellsInRow = null;
     #cellsCoordsList = null;
     #sizeGameField = null;
-    #playerImage = null;
-    #AIImage = null;
+    #player1Image = null;
+    #player2Image = null;
     #cellWidth = 50;
     #cellHeight = 50;
     #lineWidth = 2;
@@ -15,9 +16,8 @@ class GameModel {
     constructor(settings) {
         this.#numbersLines = settings.numbersLines;
         this.#numberCellsInRow = settings.numberCellsInRow;
-        this.playerIconTemplate = settings.player1IconTemplate;
-        this.playerName = settings.playerName;
-        this.AIIconTemplate = settings.player2IconTemplate;
+        this.player1Character = settings.player1Character;
+        this.player2Character = settings.player2Character;
         this.#isMovePlayer = settings.player1Character === charactersType.X;
         this.#cellsCoordsList = this.coordsCells;
     }
@@ -47,25 +47,23 @@ class GameModel {
     }
 
     get player1Image() {
-        if(this.#playerImage) {
-            return Promise.resolve(this.#playerImage);
-        }
-        return this.getImageFromSVGString(this.playerIconTemplate).then((img) => {
-            return this.#playerImage  = img;
-        }).catch((error) => {
-            throw new Error(error);
-        });
+        return this.#player1Image || (async () => {
+            try {
+                return this.#player1Image = await getImagePlayer(this.player1Character);
+            } catch(e) {
+                throw new Error(e);
+            }
+        })();
     }
 
     get player2Image() {
-        if(this.#AIImage) {
-            return Promise.resolve(this.#AIImage);
-        }
-        return this.getImageFromSVGString(this.AIIconTemplate).then((img) => {
-            return this.#AIImage = img;
-        }).catch((error) => {
-            throw new Error(error);
-        });
+        return this.#player2Image || (async () => {
+            try {
+                return this.#player2Image = await getImagePlayer(this.player2Character);
+            } catch(e) {
+                throw new Error(e);
+            }
+        })();
     }
 
     get coordsCells() {
@@ -138,8 +136,8 @@ class GameModel {
         this.#cellsCoordsList[cell.index].isEmpty = false;
     }
 
-    getCellbyCoord(coords) {
-        return this.coordsCells.find((cell, index) => {
+    getCellbyCoord(coords) { // вынести
+        return this.coordsCells.find((cell) => {
             const cellCoord = cell.coords;
             const x = cellCoord[0];
             const y = cellCoord[1];
@@ -149,19 +147,6 @@ class GameModel {
             const y2 = y[1];
             return x1 < coords.x && x2 > coords.x && y1 < coords.y && y2 > coords.y;
         });
-    }
-
-    getImageFromSVGString(svgString) { //вынести?
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            const blob = new Blob([svgString],{type:'image/svg+xml'});
-            const blobURL = URL.createObjectURL(blob);
-            img.src = blobURL;
-            img.onload = () => {
-                resolve(img)
-            }
-        })
-
     }
 
     findCellForCoord (coords) {

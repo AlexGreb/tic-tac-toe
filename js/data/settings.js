@@ -1,11 +1,15 @@
 const fieldSize = 3;
 
+export const indentCell = 15;
+
 export const charactersType = {
     X: `X`,
     O: `O`
 }
 
-export const iconX = `<svg x="0px" y="0px" 
+
+//TODO сделать  спрайт
+export const templateIconX = `<svg x="0px" y="0px" 
             xmlns="http://www.w3.org/2000/svg"
             height="25"
             width="25"
@@ -20,7 +24,7 @@ export const iconX = `<svg x="0px" y="0px"
                 c5.06-5.064,7.852-11.824,7.852-19.028c0-7.204-2.792-13.96-7.852-19.028L300.188,246z"/>
         </svg>`;
 
-export const iconO = `<svg x="0px" y="0px"
+export const templateIconO = `<svg x="0px" y="0px"
             xmlns="http://www.w3.org/2000/svg"
             height="25"
             width="25"
@@ -40,56 +44,63 @@ const characters = [
         name: `playerCharacter`,
         value: charactersType.X,
         selected: true,
-        icon: iconX,
+        icon: templateIconX,
         class: `x`
     },
     {
         name: `playerCharacter`,
         value: charactersType.O,
         selected: false,
-        icon: iconO,
+        icon: templateIconO,
         class: `zero`
     }
 ];
 
-const settingsFields = [
-    {
-        type: `input`,
-        label: `Введите имя:`,
-        name: `playerName`,
-        fieldType: `text`,
-        attrs: `required="required" placeholder="Введите имя"`,
-        value: ``,
-    },
-    {
-        type: `radio`,
-        label: `Выберите символ:`,
-        items: characters,
-        name: `playerCharacter`,
-        value: `X`
-    },
-    {
-        type: `input`,
-        label: `Выберите размер поля:`,
-        name: `numberCellsInRow`,
-        fieldType: `number`,
-        attrs: `min="3" max="15"`,
-        value: fieldSize,
-    }
-];
+export const settingsOfflineGame = {
+    fieldSize: fieldSize,
+    settingsFields: [
+        {
+            type: `input`,
+            label: `Выберите размер поля:`,
+            name: `numberCellsInRow`,
+            fieldType: `number`,
+            attrs: `min="3" max="15"`,
+            value: fieldSize,
+        }
+    ]
+};
 
-export const settingsGameDefault = {
+export const settingsOnlineGame = {
     character: `X`,
     fieldSize: fieldSize,
-    settingsFields: settingsFields
+    settingsFields:[
+        {
+            type: `radio`,
+            label: `Выберите символ:`,
+            items: characters,
+            name: `playerCharacter`,
+            value: `X`
+        },
+        {
+            type: `input`,
+            label: `Выберите размер поля:`,
+            name: `numberCellsInRow`,
+            fieldType: `number`,
+            attrs: `min="3" max="15"`,
+            value: fieldSize,
+        }
+    ]
 };
 
 export const gameMode = {
-    NETWORK: `network`,
-    DEVICE: `device`
+    ONLINE: `online`,
+    OFFLINE: `offline`
 }
 
 export const serverName = `ws://192.168.1.49:9000/`;
+
+//export const serverName = `ws://192.168.2.100:9000/`;
+
 
 export const messageType = {
     FIND_GAME: `FIND_GAME`,
@@ -105,18 +116,13 @@ export const messageType = {
     MOVE: `MOVE`
 };
 
-export const peerEvents = {
-    DATA_CHANNEL: `dataChannel`,
-    CONNECTION_STATE_CHANGE: `connectionStateChange`,
-    ICE_CONDIDATE: `iceCondidate`,
-    ICE_CONNECTION_STATE_CHANGE: `iceConnectionStateChange`,
-    OPEN_DATA_CHANNEL: `openDataChannel`,
-    CLOSE_DATA_CHANNEL: `closeDataChannel`,
-    MESSAGE_DATA_CHANNEL: `messageDataChannel`,
-    CLOSE_DATA_CHANNEL: `closeDataChannel`,
-};
 
 export const playerType = {
     INICIATOR: `iniciator`,
     RECIPIENT: `recipient`
-}
+};
+
+export const socketGetParams = {
+    CREATE_GAME: `createGame=true`,
+    FIND_GAME: `findGame=true`
+};

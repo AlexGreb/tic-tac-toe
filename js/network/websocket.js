@@ -1,5 +1,12 @@
 import EventEmitter from '../utils/event-emmiter.js';
 
+export const webSocketEvents = {
+    OPEN: `open`,
+    CLOSE: `close`,
+    MESSAGE: `message`,
+    ERROR: `error`
+};
+
 class WebSocketConnector extends EventEmitter {
     constructor() {
         super();
@@ -22,28 +29,28 @@ class WebSocketConnector extends EventEmitter {
     }
 
     onOpen = (e) => {
-        this.emit(`open`, e); // в константу
+        this.emit(webSocketEvents.OPEN, e);
     }
 
     onMessage = (event) => {
         const data = JSON.parse(event.data);
-        this.emit(`message`, data); // в константу
+        this.emit(webSocketEvents.MESSAGE, data);
     }
 
     onClose = (event) => {
-        if (event.wasClean) {
-          alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
-        } else {
-          // например, сервер убил процесс или сеть недоступна
-          // обычно в этом случае event.code 1006
-          alert('[close] Соединение прервано');
-        }
-        this.emit(`close`, event); // в константу
+        // if (event.wasClean) {
+        //   alert(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+        // } else {
+        //   // например, сервер убил процесс или сеть недоступна
+        //   // обычно в этом случае event.code 1006
+        //   alert('[close] Соединение прервано');
+        // }
+        this.emit(webSocketEvents.CLOSE, event);
     };
       
     onError = (error) => {
         alert(`[error] ${error.message}`);
-        this.emit(`error`, error); // в константу
+        this.emit(webSocketEvents.ERROR, error);
 
     };
 

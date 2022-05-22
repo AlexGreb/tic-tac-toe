@@ -1,4 +1,11 @@
-import {iconO, iconX, charactersType} from '../data/settings.js';
+import {
+    templateIconO, 
+    templateIconX, 
+    charactersType, 
+    gameMode,
+    settingsOfflineGame,
+    settingsOnlineGame
+} from '../data/settings.js';
 
 export const getObjectFromFormData = (settingsFormData) => {
     const settings = {};
@@ -9,12 +16,48 @@ export const getObjectFromFormData = (settingsFormData) => {
     return settings;
 };
 
-export const getIconPlayerTemplate = (type) => {
+export const getIconPlayerTemplateByCharacter = (type) => {
     switch(type) {
         case charactersType.O: 
-            return iconO;
+            return templateIconO;
 
         default:
-            return iconX;
+            return templateIconX;
     }
 }
+
+export const createMessage = (type, payload) => {
+    return {
+        type,
+        payload: {
+            ...payload
+        }
+    }
+}
+
+export const getSettingsGameByMode = (mode) => {
+    switch(mode) {
+        case gameMode.ONLINE:
+            return settingsOnlineGame;
+
+        default:
+            return settingsOfflineGame;
+    }
+};
+
+export const getImageFromSVGString = (svgString) => {
+    return new Promise((resolve) => {
+        const img = new Image();
+        const blob = new Blob([svgString],{type:'image/svg+xml'});
+        const blobURL = URL.createObjectURL(blob);
+        img.src = blobURL;
+        img.onload = () => {
+            resolve(img)
+        }
+    });
+};
+
+export const getImagePlayer = async (characterName) => {
+    const iconTemplate = getIconPlayerTemplateByCharacter(characterName);
+    return await getImageFromSVGString(iconTemplate);
+};

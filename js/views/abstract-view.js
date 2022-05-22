@@ -1,7 +1,9 @@
 import {render} from '../utils/dom/render.js';
+import EventEmmiter from '../utils/event-emmiter.js';
 
-class AbstractView {
+class AbstractView extends EventEmmiter {
     constructor() {
+        super();
         if(new.target === AbstractView) {
             throw new Error(`Can't instantiate AbstractView, only concrete one`);
         }
