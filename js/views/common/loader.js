@@ -23,8 +23,13 @@ export default class Loader {
                 width="${this.width}"
                 height="${this.height}"
                 viewBox="0 0 100 100">
-                <path fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
-                    <animateTransform 
+                <path filter="url(#blur)" fill="#fff" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+                <defs>
+                    <filter id="blur">
+                        <feGaussianBlur stdDeviation="1" />
+                    </filter>
+                </defs>
+                <animateTransform 
                     attributeName="transform" 
                     attributeType="XML" 
                     type="rotate"
@@ -32,6 +37,7 @@ export default class Loader {
                     from="0 50 50"
                     to="360 50 50" 
                     repeatCount="indefinite" />
+                    <animate attributeName="fill" values="#ff0000;#ff7300;#fffb00; #48ff00; #00ffd5; #002bff; #7a00ff; #ff00c8; #b16161" dur="3s" repeatCount="indefinite" />
                 </path>
                 ${this.status != null ? this.statusText : ``}
             </svg>

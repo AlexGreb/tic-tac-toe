@@ -1,3 +1,35 @@
+export const timeoutConnection = 10000;
+
+export const gameMode = {
+    ONLINE: `online`,
+    OFFLINE: `offline`
+};
+
+export const messageType = {
+    FIND_GAME: `FIND_GAME`,
+    CREATE_GAME: `CREATE_GAME`,
+    ACCEPT_OFFER: `ACCEPT_OFFER`,
+    ACCEPT_ANSWER: `ACCEPT_ANSWER`,
+    ICE_CANDIDATE: `ICE_CANDIDATE`,
+    INIT_USER: `USER`,
+    OFFER: `OFFER`,
+    ANSWER: `ANSWER`,
+    SETTINGS: `SETTINGS`,
+    START: `START`,
+    MOVE: `MOVE`
+};
+
+
+export const playerType = {
+    INICIATOR: `iniciator`,
+    RECIPIENT: `recipient`
+};
+
+export const socketGetParams = {
+    CREATE_GAME: `createGame=true`,
+    FIND_GAME: `findGame=true`
+};
+
 const fieldSize = 3;
 
 export const indentCell = 15;
@@ -65,9 +97,10 @@ export const settingsOfflineGame = {
             name: `numberCellsInRow`,
             fieldType: `number`,
             attrs: `min="3" max="15"`,
-            value: fieldSize,
+            value: fieldSize
         }
-    ]
+    ],
+    gameMode: gameMode.OFFLINE
 };
 
 export const settingsOnlineGame = {
@@ -89,40 +122,12 @@ export const settingsOnlineGame = {
             attrs: `min="3" max="15"`,
             value: fieldSize,
         }
-    ]
+    ],
+    gameMode: gameMode.ONLINE
 };
 
-export const gameMode = {
-    ONLINE: `online`,
-    OFFLINE: `offline`
-}
 
 export const serverName = `ws://192.168.1.49:9000/`;
 
 //export const serverName = `ws://192.168.2.100:9000/`;
 
-
-export const messageType = {
-    FIND_GAME: `FIND_GAME`,
-    CREATE_GAME: `CREATE_GAME`,
-    ACCEPT_OFFER: `ACCEPT_OFFER`,
-    ACCEPT_ANSWER: `ACCEPT_ANSWER`,
-    ICE_CANDIDATE: `ICE_CANDIDATE`,
-    INIT_USER: `USER`,
-    OFFER: `OFFER`,
-    ANSWER: `ANSWER`,
-    SETTINGS: `SETTINGS`,
-    START: `START`,
-    MOVE: `MOVE`
-};
-
-
-export const playerType = {
-    INICIATOR: `iniciator`,
-    RECIPIENT: `recipient`
-};
-
-export const socketGetParams = {
-    CREATE_GAME: `createGame=true`,
-    FIND_GAME: `findGame=true`
-};

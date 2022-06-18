@@ -6,26 +6,32 @@ body {
     font-family: 'Fira Sans Extra Condensed', sans-serif;
 }
 
-input[type="number"],
-input[type="text"], {
+.tick-tock-toe {
+    align-items: center;
     background-color: #000;
-    color: #fff;
-    appearance: none;
-    display: inline-block;
-    min-width: 180px;
-    padding: 10px;
-    font-size: 23px;
-    font-family: "Fira Sans Extra Condensed", sans-serif;
-    border: 2px solid #fff;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    width: 1024px;
+
+    & > * {
+        flex: 1 0 100%;
+    }
 }
 
-h1 {
-    text-align: center;
-    font-size: 2rem;
-    font-family: 'Press Start 2P', cursive;
-    line-height: 1;
-    text-transform: uppercase;
+.page-title {
     color: #ffffff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2rem;
+    line-height: 1;
+    
+    margin-bottom: 4rem;
     // text-shadow:
     // -0.2rem -0.2rem 1rem #fff,
     // 0.2rem 0.2rem 1rem #fff,
@@ -34,105 +40,25 @@ h1 {
     // 0 0 6rem var(--neon-text-color),
     // 0 0 8rem var(--neon-text-color),
     // 0 0 10rem var(--neon-text-color);
-    margin-bottom: 4rem;
-}
+    text-transform: uppercase;
 
-/* game */
-.tick-tock-toe {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    box-sizing: border-box;
-    margin: 0;
-    background-color: black;
-    //background-image: url('../img/welcome_bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding-top: 50px;
-    padding-bottom: 50px;
-
-    & > * {
-        flex: 1 0 100%;
+    & span {
+        animation: neon linear infinite 2s;
     }
 }
 
-/* welcome-screen */
-.welcome-screen {
-    // transform: translateY(-50%);
+.subtitle {
+    color: #fff;
+    font-size: 25px;
+    margin-bottom: 30px;
     text-align: center;
-
-    &__title {
-        font-size: 2rem;
-        font-family: 'Press Start 2P', cursive;
-        line-height: 1;
-        text-transform: uppercase;
-        color: #ffffff;
-        // text-shadow:
-        // -0.2rem -0.2rem 1rem #fff,
-        // 0.2rem 0.2rem 1rem #fff,
-        // 0 0 2rem var(--neon-text-color),
-        // 0 0 4rem var(--neon-text-color),
-        // 0 0 6rem var(--neon-text-color),
-        // 0 0 8rem var(--neon-text-color),
-        // 0 0 10rem var(--neon-text-color);
-        
-        margin-bottom: 5rem;
-
-        & span {
-            animation: neon linear infinite 2s;
-        }
-    }
-
-    &__find-game-btn {
-        margin-bottom: 30px;
-    }
-}
-
-/* settings-screen */
-.settings-screen {
-    &__title {
-        text-align: center;
-        font-size: 2rem;
-        font-family: 'Press Start 2P', cursive;
-        line-height: 1;
-        text-transform: uppercase;
-        color: #ffffff;
-        // text-shadow:
-        // -0.2rem -0.2rem 1rem #fff,
-        // 0.2rem 0.2rem 1rem #fff,
-        // 0 0 2rem var(--neon-text-color),
-        // 0 0 4rem var(--neon-text-color),
-        // 0 0 6rem var(--neon-text-color),
-        // 0 0 8rem var(--neon-text-color),
-        // 0 0 10rem var(--neon-text-color);
-        
-        margin-bottom: 5rem;
-
-        & span {
-            animation: neon linear infinite 2s;
-        }
-    }
-
-    &__size-field {
-        margin-bottom: 50px;
-    }
 }
 
 
 /* choose-character */
-.choose-character {
-    &__title {
-        color: #fff;
-        font-size: 25px;
-        text-align: center;
-    }
+.character{
+    text-align: center;
 
-   &__characters {
-       text-align: center;
-   } 
 
    &__input {
        display: none;
@@ -144,120 +70,33 @@ h1 {
    }
 
    &__x {
-       display: inline-flex;
-       justify-content: center;
        align-self: center;
-       border-width: 1px;
        border-color: transparent;
        border-style: solid;
+       border-width: 1px;
        color: red;
-       padding: 10px;
        cursor: pointer;
+       display: inline-flex;
+       justify-content: center;
        margin: 0 15px;
+       padding: 10px;
    }
 
    &__zero {
-        display: inline-flex;
-        justify-content: center;
         align-self: center;
-        border-width: 1px;
         border-color: transparent;
         border-style: solid;
-        padding: 10px;
+        border-width: 1px;
         color: blue;
         cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
         margin: 0 15px;
+        padding: 10px;
    }
 
 }
 
-/* settings-field */
-
-.settings-field {
-    &__title {
-        color: #fff;
-        font-size: 25px;
-        text-align: center;
-        margin-bottom: 30px;
-    }
-
-    &__size {
-        text-align: center;
-    }
-
-    &__size-input {
-
-        input {
-            width: 50px;
-            text-align: center;
-            box-sizing: border-box;
-        }
-    }
-
-    &__cross {
-        display: inline-block;
-        padding: 5px;
-        color: white;
-        font-size: 15px;
-    }
-
-
-}
-/* start-block */
-.start-block {
-    text-align: center;
-
-    &__create-network-game-btn-wrap {
-        margin-bottom: 30px;
-    }
-}
-
-/* end-screen */
-.end-screen {
-    text-align: center;
-
-    &__title {
-        font-size: 2rem;
-        font-family: 'Press Start 2P', cursive;
-        line-height: 1;
-        text-transform: uppercase;
-        color: #ffffff;
-        // text-shadow:
-        // -0.2rem -0.2rem 1rem #fff,
-        // 0.2rem 0.2rem 1rem #fff,
-        // 0 0 2rem var(--neon-text-color),
-        // 0 0 4rem var(--neon-text-color),
-        // 0 0 6rem var(--neon-text-color),
-        // 0 0 8rem var(--neon-text-color),
-        // 0 0 10rem var(--neon-text-color);
-        
-        margin-bottom: 5rem;
-    }
-
-    &__congratulations {
-        display: inline-block;
-        margin-bottom: 40px;
-    }
-}
-
-.game {
-    display: grid;
-    justify-content: center;
-
-    &__field {
-        display: grid;
-        justify-content: center;
-    }
-
-    canvas {
-        background-color: black;
-        box-shadow: 0 0 15px #ff00b6;
-    }
-}
-
-#gameCanvas {
-    cursor: pointer;
-}
 
 /* neon-text */
 @keyframes neon {

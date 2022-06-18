@@ -1,40 +1,36 @@
-import {render} from '../utils/dom/render.js';
+import { render } from '../utils/dom/render.js';
 import EventEmmiter from '../utils/event-emmiter.js';
 
 class AbstractView extends EventEmmiter {
-    constructor() {
-        super();
-        if(new.target === AbstractView) {
-            throw new Error(`Can't instantiate AbstractView, only concrete one`);
-        }
+  constructor() {
+    super();
+    if (new.target === AbstractView) {
+      throw new Error(`Can't instantiate AbstractView, only concrete one`);
+    }
+  }
+
+  get template() {
+    throw new Error(`Template is required`);
+  }
+
+  get element() {
+    if (this._element) {
+      return this._element;
     }
 
-    get template() {
-        throw new Error(`Template is required`);
-    }
+    this._element = this.render();
+    this.bind(this._element);
+    this.postRender(this._element);
+    return this._element;
+  }
 
-    get element() {
-        if(this._element) {
-            return this._element
-        }
+  render() {
+    return render(this.template, this.className);
+  }
 
-        this._element = this.render();
-        this.bind(this._element);
-        this.postRender();
-        return this._element;
-    }
+  bind() {}
 
-    render() {
-        return render(this.template, this.className);
-    }
-
-    bind() {
-         
-    }
-
-    postRender() {
-
-    }
+  postRender() {}
 }
 
 export default AbstractView;

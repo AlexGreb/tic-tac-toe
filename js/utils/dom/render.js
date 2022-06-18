@@ -3,6 +3,6 @@ export const render = (html, className) => {
     if(className){
         wrapper.classList.add(className);
     }
-    wrapper.innerHTML = html.trim();
-    return wrapper;
+    wrapper.insertAdjacentHTML('afterbegin', html.trim());
+    return wrapper.children[0];
 }

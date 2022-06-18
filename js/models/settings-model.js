@@ -1,8 +1,6 @@
 class SettingsModel {
-
-    constructor(settings) {
-        this._settings = settings;
-    }
+  constructor(settings) {
+    this._settings = settings;
+  }
 }
-
 export default SettingsModel;

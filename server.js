@@ -7,12 +7,14 @@ const wsClients = new Map();
 let countId = 1;
 
 
+
 function onConnect(wsClient, req) {
+    const clientId = countId;
     const baseURL = req.protocol + '://' + req.headers.host + '/';
     const reqUrl = new URL(req.url, baseURL);
     const searchParams = reqUrl.searchParams;
     const client = {
-        clientId: countId,
+        clientId,
         client: wsClient
     };
 
@@ -41,11 +43,14 @@ function onConnect(wsClient, req) {
             switch (reqMessage.type) {
 
                 case messageType.OFFER:
+
+                    const client = wsClients.get(clientId);
+                    client.offer = reqMessage.payload.offer;
                     createGame(reqMessage.payload.offer, reqMessage.payload.iniciatorId);
                   break;
     
                 case messageType.FIND_GAME:
-                    findGame();
+                    findGame(wsClient);
                   break;
     
                 case messageType.ANSWER:
@@ -113,17 +118,29 @@ function createGame(offer, clientId) {
     }
 };
 
-function findGame() {
+function findGame(searchingClient) {
     if(wsClients.size > 0) {
         for(let [key, value] of wsClients) {
             if(value.status === `createGame`) {
-                const {client} = wsClients.get(key);
+                const wsClient = wsClients.get(key);
 
-                client.send(`ответ на приглашение`);
-                wsClients.set(key, {
-                    status: `inGame`,
-                    client
-                });
+                // если есть созданная игра отправляем реципиенту offer 
+                if(searchingClient){
+                    searchingClient.send(JSON.stringify({
+                        type: messageType.OFFER,
+                        payload: {
+                            iniciatorId: key,
+                            offer: wsClient.offer
+                        }
+                    }));
+                }
+                wsClient.status = `inGame`;
+
+
+                // wsClients.set(key, {
+                //     status: `inGame`,
+                //     client
+                // });
             }
             break;
         }

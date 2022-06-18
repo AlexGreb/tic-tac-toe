@@ -1,65 +1,38 @@
-input {
-    padding: 8px 10px;
-    box-sizing: border-box;
-    font-size: 18px;
-    font-family: inherit;
-    border: none;
-    color: #fff;
-    background: #111; 
-    border-radius: 10px;
 
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-        appearance: none;
-    }
-    
+input[type="number"],
+input[type="text"] {
+    appearance: none;
+    background-color: #000;
+    border: 0;
+    border-radius: 10px;
+    color: #fff;
+    display: inline-block;
+    font-family: "Fira Sans Extra Condensed", sans-serif;
+    font-size: 23px;
+    max-width: 180px;
+    min-width: 180px;
+    padding: 10px;
+    text-align: center;
 }
 
-.input {
-    position: relative;
-    z-index: 0;
+.input-wrap {
     display: inline-block;
+    position: relative;
+    &::before {
 
-    &:before {
-        content: '';
+        animation: glowing 20s linear infinite;
         background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+        background-size: 400%;
+        border-radius: 10px;
+        content: "";
+        filter: blur(5px);
+        height: calc(100% + 4px);
+        left: -2px;
         position: absolute;
         top: -2px;
-        left:-2px;
-        background-size: 400%;
-        z-index: -1;
-        filter: blur(5px);
+        transition: opacity 0.3s ease-in-out;
         width: calc(100% + 4px);
-        height: calc(100% + 4px);
-        animation: glowing 20s linear infinite;
-        transition: opacity .3s ease-in-out;
-        border-radius: 10px;
-    }
-    
-    &:active {
-        color: #000
-    }
-    
-    &:active:after {
-        background: transparent;
-    }
-    
-    &:after {
         z-index: -1;
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: #111;
-        left: 0;
-        top: 0;
-        border-radius: 10px;
+    
     }
-
-}
-
-@keyframes glowing {
-    0% { background-position: 0 0; }
-    50% { background-position: 400% 0; }
-    100% { background-position: 0 0; }
 }
