@@ -68,7 +68,7 @@ class GameScreen {
       ? this.gameModel.player1Character
       : this.gameModel.player2Character;
     //indentCell - отступы от границы ячейки
-    await this.gameView.drawImgInCell(
+    let a = await this.gameView.drawImgInCell(
       cell,
       imgName,
       this.gameModel.imageWidth - indentCell,
@@ -77,6 +77,11 @@ class GameScreen {
       this.gameModel.cellHeight
     );
     this.gameModel.changeStateCell(cell);
+    const isWin = this.gameModel.checkWin(cell);
+    if (isWin) {
+      Modal.alert(`Поздравляю, вы выйграли!!!`).show();
+    }
+
     if (this.gameMode === gameMode.ONLINE && needSend) {
       const message = createMessage(messageType.MOVE, { cell });
       this.#peerConnection.sendData(message);
