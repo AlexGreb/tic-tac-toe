@@ -23,8 +23,8 @@ class Router {
   //     changeView(settingsScreen.element);
   // }
 
-  static showGame(gameSettings, peerConection) {
-    new GameScreen(gameSettings, changeView, peerConection);
+  static showGame(gameSettings, connection) {
+    new GameScreen(gameSettings, changeView, connection);
   }
 }
 

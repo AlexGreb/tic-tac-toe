@@ -1,33 +1,33 @@
 export const timeoutConnection = 10000;
 
 export const gameMode = {
-    ONLINE: `online`,
-    OFFLINE: `offline`
+  ONLINE: `online`,
+  OFFLINE: `offline`,
 };
 
 export const messageType = {
-    FIND_GAME: `FIND_GAME`,
-    CREATE_GAME: `CREATE_GAME`,
-    ACCEPT_OFFER: `ACCEPT_OFFER`,
-    ACCEPT_ANSWER: `ACCEPT_ANSWER`,
-    ICE_CANDIDATE: `ICE_CANDIDATE`,
-    INIT_USER: `USER`,
-    OFFER: `OFFER`,
-    ANSWER: `ANSWER`,
-    SETTINGS: `SETTINGS`,
-    START: `START`,
-    MOVE: `MOVE`
+  FIND_GAME: `FIND_GAME`,
+  CREATE_GAME: `CREATE_GAME`,
+  ACCEPT_OFFER: `ACCEPT_OFFER`,
+  ACCEPT_ANSWER: `ACCEPT_ANSWER`,
+  ICE_CANDIDATE: `ICE_CANDIDATE`,
+  INIT_USER: `USER`,
+  OFFER: `OFFER`,
+  ANSWER: `ANSWER`,
+  SETTINGS: `SETTINGS`,
+  START: `START`,
+  MOVE: `MOVE`,
+  RETRY: `RETRY`,
 };
 
-
 export const playerType = {
-    INICIATOR: `iniciator`,
-    RECIPIENT: `recipient`
+  INITIATOR: `initiator`,
+  RECIPIENT: `recipient`,
 };
 
 export const socketGetParams = {
-    CREATE_GAME: `createGame=true`,
-    FIND_GAME: `findGame=true`
+  CREATE_GAME: `createGame=true`,
+  FIND_GAME: `findGame=true`,
 };
 
 const fieldSize = 3;
@@ -35,12 +35,10 @@ const fieldSize = 3;
 export const indentCell = 15;
 
 export const charactersType = {
-    X: `X`,
-    O: `O`
-}
+  X: `X`,
+  O: `O`,
+};
 
-
-//TODO сделать  спрайт
 export const templateIconX = `<svg x="0px" y="0px" 
             xmlns="http://www.w3.org/2000/svg"
             height="25"
@@ -70,64 +68,64 @@ export const templateIconO = `<svg x="0px" y="0px"
                 C343.765,231.133,327.867,269.489,299.002,298.36z"/>
             </svg>`;
 
-
 const characters = [
-    {
-        name: `playerCharacter`,
-        value: charactersType.X,
-        selected: true,
-        icon: templateIconX,
-        class: `x`
-    },
-    {
-        name: `playerCharacter`,
-        value: charactersType.O,
-        selected: false,
-        icon: templateIconO,
-        class: `zero`
-    }
+  {
+    name: `playerCharacter`,
+    value: charactersType.X,
+    selected: true,
+    icon: templateIconX,
+    class: `x`,
+  },
+  {
+    name: `playerCharacter`,
+    value: charactersType.O,
+    selected: false,
+    icon: templateIconO,
+    class: `zero`,
+  },
 ];
 
 export const settingsOfflineGame = {
-    fieldSize: fieldSize,
-    settingsFields: [
-        {
-            type: `input`,
-            label: `Выберите размер поля:`,
-            name: `numberCellsInRow`,
-            fieldType: `number`,
-            attrs: `min="3" max="15"`,
-            value: fieldSize
-        }
-    ],
-    gameMode: gameMode.OFFLINE
+  fieldSize: fieldSize,
+  settingsFields: [
+    {
+      type: `input`,
+      label: `Выберите размер поля:`,
+      name: `numberCellsInRow`,
+      fieldType: `number`,
+      attrs: `min="3" max="15"`,
+      value: fieldSize,
+    },
+  ],
+  gameMode: gameMode.OFFLINE,
 };
 
 export const settingsOnlineGame = {
-    character: `X`,
-    fieldSize: fieldSize,
-    settingsFields:[
-        {
-            type: `radio`,
-            label: `Выберите символ:`,
-            items: characters,
-            name: `playerCharacter`,
-            value: `X`
-        },
-        {
-            type: `input`,
-            label: `Выберите размер поля:`,
-            name: `numberCellsInRow`,
-            fieldType: `number`,
-            attrs: `min="3" max="15"`,
-            value: fieldSize,
-        }
-    ],
-    gameMode: gameMode.ONLINE
+  character: `X`,
+  fieldSize: fieldSize,
+  settingsFields: [
+    {
+      type: `radio`,
+      label: `Выберите символ:`,
+      items: characters,
+      name: `playerCharacter`,
+      value: `X`,
+    },
+    {
+      type: `input`,
+      label: `Выберите размер поля:`,
+      name: `numberCellsInRow`,
+      fieldType: `number`,
+      attrs: `min="3" max="15"`,
+      value: fieldSize,
+    },
+  ],
+  gameMode: gameMode.ONLINE,
 };
 
+export const colorLineGrid = `blue`;
 
 export const serverName = `ws://192.168.1.49:9000/`;
 
 //export const serverName = `ws://192.168.2.100:9000/`;
-
+//export const serverName = `ws://192.168.2.100:9000/`;

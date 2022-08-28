@@ -1,0 +1,33 @@
+.settings-view {
+    display: grid;
+    justify-content: center;
+
+    &__form {
+        display: grid;
+        justify-content: center;
+        row-gap: 35px;
+    }
+
+    &__start-block {
+        display: grid;
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    &__back {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 35px;
+    }
+}
+
+.settings-block {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    &__title {
+        margin-top: 0;
+    }
+}

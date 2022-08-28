@@ -16,6 +16,7 @@
         "prettier"
     ],
     "rules": {
+        "max-len": ["error", 140, 2],
         "prettier/prettier": "error"
     }
 }

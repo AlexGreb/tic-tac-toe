@@ -1,33 +1,18 @@
 import Router from '../router.js';
-import { gameMode, messageType, indentCell } from '../data/settings.js';
+import { messageType, indentCell } from '../data/settings.js';
 import { peerConnectorEvents } from '../network/peer-connector.js';
 import GameView, { gameViewEvents } from '../views/game/game-view.js';
 import GameModel from '../models/game-model.js';
-import { createMessage } from '../helpers/helpers.js';
+import { createMessage } from '../helpers/network/network-helper.js';
 import Modal from 'modal-vanilla';
 
 class GameScreen {
-  #peerConnection = null;
+  #connection = null;
 
-  constructor(gameSettings, onStartCallback, peerConection) {
+  constructor(gameSettings, onStartCallback, connection) {
     this.onStartCallback = onStartCallback;
     this.gameSettings = gameSettings;
-    this.gameMode = this.gameSettings.mode;
-    //TODO создать в моделе свойство isOnline
-    if (this.gameMode === gameMode.ONLINE) {
-      // подписываюсь на сообщения в datachannel
-      this.#peerConnection = peerConection;
-      this.unsubscribeMessageDataChannel = this.#peerConnection.subscribe(
-        peerConnectorEvents.MESSAGE_DATA_CHANNEL,
-        this.onMessageDataChannel
-      );
-      this.unsubscribeCloseDataChannel = this.#peerConnection.subscribe(
-        peerConnectorEvents.CLOSE_DATA_CHANNEL,
-        this.onCloseDataChannel
-      );
-      this.#peerConnection.sendData(createMessage(messageType.START));
-    }
-
+    this.#connection = connection || null;
     this.startGame();
   }
 
@@ -35,9 +20,9 @@ class GameScreen {
     return this.gameView.element;
   }
 
-  onClickCanvas = (e) => {
-    //TODO
-    if (this.gameMode === gameMode.ONLINE && !this.gameModel.isMovePlayer) {
+  onClickGameField = async (e) => {
+    // если чужой ход или игра закончилась е обрабатывать клик по полю
+    if (this.gameModel.isFreeze || this.gameModel.gameStatus === this.gameModel.gameStatuses.END) {
       return;
     }
     const clickCoords = {
@@ -47,47 +32,81 @@ class GameScreen {
 
     const cell = this.gameModel.getCellByCoord(clickCoords);
     if (cell && cell.isEmpty) {
-      this.move(cell, this.gameMode === gameMode.ONLINE);
-      //TODO
-      // if (this.gameMode === gameMode.ONLINE) {
-      //   this.gameModel.changePlayer();
-      //   // this.gameView.changeMoveStatus(this.gameModel.gameStatus);
-      // }
+      await this.move(cell, this.gameModel.isOnlineMode);
     }
   };
 
   move = async (cell, needSend = false) => {
-    if (
-      !this.gameModel.isMovePlayer &&
-      this.gameMode === gameMode.ONLINE &&
-      needSend
-    )
-      return;
-    //TODO get current player
-    const imgName = this.gameModel.isMovePlayer
-      ? this.gameModel.player1Character
-      : this.gameModel.player2Character;
+    if (this.gameModel.isFreeze && needSend) return;
+
+    const imgName = this.gameModel.currentPlayer;
     //indentCell - отступы от границы ячейки
-    let a = await this.gameView.drawImgInCell(
-      cell,
-      imgName,
-      this.gameModel.imageWidth - indentCell,
-      this.gameModel.imageHeight - indentCell,
-      this.gameModel.cellWidth,
-      this.gameModel.cellHeight
-    );
+    await this.gameView.drawImgInCell(cell, imgName, this.gameModel.imageWidth - indentCell, this.gameModel.imageHeight - indentCell);
     this.gameModel.changeStateCell(cell);
-    const isWin = this.gameModel.checkWin(cell);
-    if (isWin) {
-      Modal.alert(`Поздравляю, вы выйграли!!!`).show();
+
+    if (this.gameModel.isOnlineMode && needSend) {
+      const message = createMessage(messageType.MOVE, { cell });
+      this.#connection.sendMessage(message);
+    }
+    const winObj = this.gameModel.checkWin(cell);
+    //отрисовка линии при выйгрыше
+    let statusText = null;
+    if (winObj.gameStatus !== this.gameModel.gameStatuses.GAME) {
+      statusText = `Ничья`;
+      if (winObj.gameStatus === this.gameModel.gameStatuses.PLAYER_WIN) {
+        this.gameView.renderWinLine(this.getWinLineCoords(winObj));
+        statusText = `Победили ${this.gameModel.currentPlayer}`;
+      }
+      this.gameModel.gameStatus = this.gameModel.gameStatuses.END;
+      this.gameView.showRetryBtn();
     }
 
-    if (this.gameMode === gameMode.ONLINE && needSend) {
-      const message = createMessage(messageType.MOVE, { cell });
-      this.#peerConnection.sendData(message);
-    }
     this.gameModel.changePlayer();
-    this.gameView.changeMoveStatus(this.gameModel.gameStatus);
+    this.gameView.changeMoveStatusText(statusText ?? this.gameModel.gameStatusText);
+  };
+
+  getWinLineCoords = ({ direction, winCellsList }) => {
+    const directions = this.gameModel.winDirections;
+    const startCell = winCellsList.shift();
+    const endCell = winCellsList.pop();
+    const middleOfCell = this.gameModel.cellHeight / 2;
+
+    const directionCheckMap = {
+      [directions.LEFT_TO_RIGHT]: () => {
+        return {
+          startX1Coords: startCell.coords[0][0],
+          endY1Coords: startCell.coords[1][1] - middleOfCell,
+          startX2Coords: endCell.coords[0][1],
+          endY2Coords: endCell.coords[1][1] - middleOfCell,
+        };
+      },
+      [directions.TOP_TO_BOTTOM]: () => {
+        return {
+          startX1Coords: startCell.coords[0][0] + middleOfCell,
+          endY1Coords: startCell.coords[1][0],
+          startX2Coords: endCell.coords[0][0] + middleOfCell,
+          endY2Coords: endCell.coords[1][1],
+        };
+      },
+      [directions.RIGHT_TOP_TO_LEFT_BOTTOM]: () => {
+        return {
+          startX1Coords: startCell.coords[0][0],
+          endY1Coords: startCell.coords[1][1],
+          startX2Coords: endCell.coords[0][1],
+          endY2Coords: endCell.coords[1][0],
+        };
+      },
+      [directions.LEFT_TOP_TO_RIGHT_BOTTOM]: () => {
+        return {
+          startX1Coords: startCell.coords[0][0],
+          endY1Coords: startCell.coords[1][0],
+          startX2Coords: endCell.coords[0][1],
+          endY2Coords: endCell.coords[1][1],
+        };
+      },
+    };
+
+    return directionCheckMap[direction]?.();
   };
 
   onMessageDataChannel = async (message) => {
@@ -95,14 +114,16 @@ class GameScreen {
       case messageType.MOVE:
         await this.move(message.payload.cell, false);
         break;
+      case messageType.RETRY:
+        this.startGame();
+        break;
     }
   };
 
   onCloseDataChannel = () => {
-    //TODO проверка завершилась ли игра
     this.unsubscribeMessageDataChannel();
     this.unsubscribeCloseDataChannel();
-    this.#peerConnection = null;
+    this.#connection = null;
 
     const alert = Modal.alert(`Ваш проивник вышел!`, {
       buttons: [
@@ -121,14 +142,43 @@ class GameScreen {
     });
   };
 
+  retryGame = () => {
+    if (this.gameModel.isOnlineMode) {
+      const message = createMessage(messageType.RETRY);
+      this.#connection.sendMessage(message);
+    }
+    this.unsubscribeClickGameField();
+    this.unsubscribeRetry();
+
+    this.destroyListeners();
+    this.startGame();
+  };
+
+  destroyListeners() {
+    this.unsubscribeClickGameField();
+    this.unsubscribeRetry();
+    this.gameView.unbind();
+  }
+
   startGame() {
     this.gameModel = new GameModel(this.gameSettings);
     this.gameView = new GameView(this.gameModel.gameFieldSettings);
-    this.gameView.subscribe(
-      gameViewEvents.CLICK_GAME_FIELD,
-      this.onClickCanvas
-    );
-    this.gameView.changeMoveStatus(this.gameModel.gameStatus);
+    if (this.gameModel.isOnlineMode) {
+      // подписываюсь на сообщения в datachannel
+      this.unsubscribeMessageDataChannel = this.#connection.subscribeMessageServer(
+        peerConnectorEvents.MESSAGE_DATA_CHANNEL,
+        this.onMessageDataChannel
+      );
+      this.unsubscribeCloseDataChannel = this.#connection.subscribeMessageServer(
+        peerConnectorEvents.CLOSE_DATA_CHANNEL,
+        this.onCloseDataChannel
+      );
+      this.#connection.sendMessage(createMessage(messageType.START));
+    }
+
+    this.unsubscribeClickGameField = this.gameView.subscribe(gameViewEvents.CLICK_GAME_FIELD, this.onClickGameField);
+    this.unsubscribeRetry = this.gameView.subscribe(gameViewEvents.CLICK_RETRY, this.retryGame);
+    this.gameView.changeMoveStatusText(this.gameModel.gameStatusText);
     this.onStartCallback(this.element);
   }
 }

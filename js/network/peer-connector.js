@@ -1,7 +1,7 @@
 import EventEmitter from '../utils/event-emmiter.js';
 import { messageType, timeoutConnection } from '../data/settings.js';
-import { webSocketEvents } from '../network/websocket.js';
-import { createMessage } from '../helpers/helpers.js';
+import { webSocketEvents } from './websocket.js';
+import { createMessage } from '../helpers/network/network-helper.js';
 
 export const peerConnectorEvents = {
   DATA_CHANNEL: `dataChannel`,
@@ -24,14 +24,14 @@ class PeerConnector extends EventEmitter {
   #channel = null;
   #localIceCondidateList = [];
   #peerConnection = null;
-  #iniciatorId = null;
+  #initiatorId = null;
   #recipientId = null;
   #connectionTimeout = null;
 
-  constructor(socket, isIniciator, nameDataChannel = `gomoku`) {
+  constructor(socket, isInitiator, nameDataChannel = `gomoku`) {
     super();
     this.nameDataChannel = nameDataChannel;
-    this.isIniciator = isIniciator;
+    this.isInitiator = isInitiator;
     this.socket = socket;
     this.socket.subscribe(webSocketEvents.MESSAGE, this.onSocketMessage);
   }
@@ -40,12 +40,12 @@ class PeerConnector extends EventEmitter {
     return this.#channel;
   }
 
-  get iniciatorId() {
-    return this.#iniciatorId;
+  get initiatorId() {
+    return this.#initiatorId;
   }
 
-  set iniciatorId(id) {
-    this.#iniciatorId = id;
+  set initiatorId(id) {
+    this.#initiatorId = id;
   }
 
   get recipientId() {
@@ -63,15 +63,9 @@ class PeerConnector extends EventEmitter {
   create() {
     this.#peerConnection = new RTCPeerConnection();
     this.#peerConnection.addEventListener(`datachannel`, this.onDataChannel);
-    this.#peerConnection.addEventListener(
-      `connectionstatechange`,
-      this.onConnectionStateChange
-    );
+    this.#peerConnection.addEventListener(`connectionstatechange`, this.onConnectionStateChange);
     this.#peerConnection.addEventListener(`icecandidate`, this.onIceCandidate);
-    this.#peerConnection.addEventListener(
-      `iceconnectionstatechange`,
-      this.onIceConnectionStateChange
-    );
+    this.#peerConnection.addEventListener(`iceconnectionstatechange`, this.onIceConnectionStateChange);
   }
 
   close() {
@@ -122,7 +116,7 @@ class PeerConnector extends EventEmitter {
 
   createDataChannel(name) {
     this.#channel = this.#peerConnection.createDataChannel(name);
-    // использую on т.к. createDataChannel вызывается у iniciator`a
+    // использую on т.к. createDataChannel вызывается у initiator`a
     this.#channel.onopen = this.onOpenDataChannel;
     this.#channel.onclose = this.onCloseDataChannel;
     this.#channel.onmessage = this.onMessageDataChannel;
@@ -145,17 +139,11 @@ class PeerConnector extends EventEmitter {
     if (this.#peerConnection.connectionState === `connected`) {
       this.socket.close();
     }
-    this.emit(
-      peerConnectorEvents.CONNECTION_STATE_CHANGE,
-      this.#peerConnection.connectionState
-    );
+    this.emit(peerConnectorEvents.CONNECTION_STATE_CHANGE, this.#peerConnection.connectionState);
   };
 
   onIceConnectionStateChange = (e) => {
-    this.emit(
-      peerConnectorEvents.ICE_CONNECTION_STATE_CHANGE,
-      this.#peerConnection.iceConnectionState
-    );
+    this.emit(peerConnectorEvents.ICE_CONNECTION_STATE_CHANGE, this.#peerConnection.iceConnectionState);
   };
 
   onIceCandidate = (event) => {
@@ -170,7 +158,7 @@ class PeerConnector extends EventEmitter {
 
   sendIceCandidates() {
     const message = createMessage(messageType.ICE_CANDIDATE, {
-      clientId: this.isIniciator ? this.recipientId : this.iniciatorId,
+      clientId: this.isInitiator ? this.recipientId : this.initiatorId,
       iceCondidateList: this.#localIceCondidateList,
     });
 
@@ -189,12 +177,12 @@ class PeerConnector extends EventEmitter {
     switch (message.type) {
       case messageType.INIT_USER:
         const clientId = message.payload.clientId;
-        if (this.isIniciator) {
-          this.iniciatorId = clientId;
+        if (this.isInitiator) {
+          this.initiatorId = clientId;
           const offer = await this.createOffer();
           const responseMessage = createMessage(messageType.OFFER, {
             offer,
-            iniciatorId: this.iniciatorId,
+            initiatorId: this.initiatorId,
           });
 
           this.socket.send(responseMessage);
@@ -216,11 +204,11 @@ class PeerConnector extends EventEmitter {
         break;
 
       case messageType.OFFER:
-        this.iniciatorId = message.payload.iniciatorId;
+        this.initiatorId = message.payload.initiatorId;
         this.acceptRemoteOffer(message.payload.offer).then(() => {
           this.createAnswer().then((answer) => {
             const responseMessage = createMessage(messageType.ANSWER, {
-              iniciatorId: this.iniciatorId,
+              initiatorId: this.initiatorId,
               recipientId: this.recipientId,
               answer,
             });

@@ -1,17 +1,26 @@
 import AbstractView from '../abstract-view.js';
-import { getImagePlayer } from '../../helpers/helpers.js';
+import { colorLineGrid } from '../../data/settings.js';
+import { getImagePlayer } from '../../helpers/settings/settings-helper.js';
 
 export const gameViewEvents = {
   CLICK_GAME_FIELD: `clickGameField`,
+  CLICK_RETRY: `retry`,
 };
 
 class GameView extends AbstractView {
   #gameField = null;
+  #retryBtn = null;
   #playerImages = new Map();
 
   constructor(fieldSettings) {
     super();
-    this.fieldSettings = fieldSettings;
+    // this.fieldSettings = fieldSettings;
+    this.cellHeight = fieldSettings.cellHeight;
+    this.cellWidth = fieldSettings.cellWidth;
+    this.lineWidth = fieldSettings.lineWidth;
+    this.widthField = fieldSettings.sizeField.width;
+    this.heightField = fieldSettings.sizeField.height;
+    this.numbersLines = fieldSettings.numbersLines;
   }
 
   handleClickCanvas = (e) => {
@@ -19,7 +28,12 @@ class GameView extends AbstractView {
     this.emit(gameViewEvents.CLICK_GAME_FIELD, e);
   };
 
-  changeMoveStatus = (statusText) => {
+  handleRetry = (e) => {
+    e.preventDefault();
+    this.emit(gameViewEvents.CLICK_RETRY, e);
+  };
+
+  changeMoveStatusText = (statusText) => {
     if (this.moveStatusEl == null) {
       this.moveStatusEl = this.element.querySelector(`.js-move-status`);
     }
@@ -28,17 +42,21 @@ class GameView extends AbstractView {
 
   bind(element) {
     this.#gameField = element.querySelector(`#gameCanvas`);
+    this.#retryBtn = element.querySelector(`.js-retry-btn`);
     this.#gameField.addEventListener(`click`, this.handleClickCanvas);
+    this.#retryBtn.addEventListener(`click`, this.handleRetry);
   }
 
   unbind() {
     this.#gameField.removeEventListener(`click`, this.handleClickCanvas);
+    this.#retryBtn.removeEventListener(`click`, this.handleRetry);
   }
 
   get template() {
     return `
             <article class="game-view">
                 <h1 class="page-title">Игра</h1>
+                <button type="button" class="btn game-view__retry-btn js-retry-btn" hidden>Заново</button>
                 <h2 class="game-view__move-status js-move-status"></h2>
                 <canvas id="gameCanvas"></canvas>
             </article>
@@ -47,33 +65,24 @@ class GameView extends AbstractView {
 
   drawGameField() {
     const ctx = this.ctx;
-    const cellHeight = this.fieldSettings.cellHeight;
-    const cellWidth = this.fieldSettings.cellWidth;
-    const lineWidth = this.fieldSettings.lineWidth;
-    const width = this.fieldSettings.sizeField.width;
-    const height = this.fieldSettings.sizeField.height;
-    const numbersLines = this.fieldSettings.numbersLines;
 
     ctx.beginPath();
-    ctx.strokeStyle = 'blue';
+    ctx.strokeStyle = colorLineGrid;
 
-    const cellsList = new Array(numbersLines).fill(null);
+    const cellsList = new Array(this.numbersLines).fill(null);
 
     cellsList.forEach((curr, i) => {
       //canvas отрисовывает влево и вправо от заданной точки поэтому рисуем не с нуля
-      const coords = [];
 
       // горизонтальная отрисовка
-      let indent = i * lineWidth + lineWidth / 2 + cellWidth * i;
+      let indent = i * this.lineWidth + this.lineWidth / 2 + this.cellWidth * i;
       ctx.moveTo(0, indent);
-      ctx.lineTo(width, indent);
-
-      coords.push(indent + lineWidth);
+      ctx.lineTo(this.widthField, indent);
 
       // вертикальная отрисовка
-      indent = i * lineWidth + lineWidth / 2 + cellHeight * i;
+      indent = i * this.lineWidth + this.lineWidth / 2 + this.cellHeight * i;
       ctx.moveTo(indent, 0);
-      ctx.lineTo(indent, height);
+      ctx.lineTo(indent, this.heightField);
     });
 
     ctx.stroke();
@@ -90,35 +99,45 @@ class GameView extends AbstractView {
     return playerImage;
   }
 
-  async drawImgInCell(
-    cell,
-    nameImg,
-    widthImg,
-    heightImg,
-    cellWidth,
-    cellHeight
-  ) {
+  async drawImgInCell(cell, nameImg, widthImg, heightImg) {
     const playerImage = await this.renderImage(nameImg);
     const ctx = this.ctx;
     const x = cell.coords[0];
     const y = cell.coords[1];
     let x1 = x[0];
     let y1 = y[0];
-    if (widthImg < cellWidth) {
-      x1 = x1 + Math.ceil((cellWidth - widthImg) / 2);
+    if (widthImg < this.cellWidth) {
+      x1 = x1 + Math.ceil((this.cellWidth - widthImg) / 2);
     }
 
-    if (heightImg < cellHeight) {
-      y1 = y1 + Math.ceil((cellHeight - heightImg) / 2);
+    if (heightImg < this.cellHeight) {
+      y1 = y1 + Math.ceil((this.cellHeight - heightImg) / 2);
     }
     ctx.drawImage(playerImage, x1, y1, widthImg, heightImg);
   }
 
+  renderWinLine(coordsWinLine) {
+    const ctx = this.ctx;
+    ctx.lineWidth = 4;
+    const { startX1Coords, startX2Coords, endY1Coords, endY2Coords } = coordsWinLine;
+
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(197, 197 , 3, .8)';
+    ctx.moveTo(startX1Coords, endY1Coords);
+    ctx.lineTo(startX2Coords, endY2Coords);
+    ctx.stroke();
+    ctx.closePath();
+  }
+
+  showRetryBtn() {
+    this.#retryBtn.removeAttribute(`hidden`);
+  }
+
   postRender() {
-    this.#gameField.setAttribute(`width`, this.fieldSettings.sizeField.width);
-    this.#gameField.setAttribute(`height`, this.fieldSettings.sizeField.height);
+    this.#gameField.setAttribute(`width`, this.widthField);
+    this.#gameField.setAttribute(`height`, this.heightField);
     this.ctx = this.#gameField.getContext(`2d`);
-    this.ctx.lineWidth = this.fieldSettings.lineWidth;
+    this.ctx.lineWidth = this.lineWidth;
     this.drawGameField();
   }
 }
