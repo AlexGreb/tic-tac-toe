@@ -2,9 +2,6 @@
   <img src="https://media.giphy.com/media/dWesBcTLavkZuG35MI/giphy.gif" width="600" height="300"/>
 </div>
 
-<div align="center">
-  <img src="https://media.giphy.com/media/M9gbBd9nbDrOTu1Mqx/giphy.gif" width="100"/>
-</div>
 
 ### :man_technologist: About Me : I am a Frontend Developer <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30">.
 
@@ -32,6 +29,9 @@
 
 [![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=AlexGreb&layout=compact&theme=vision-friendly-dark)](https://github.com/anuraghazra/github-readme-stats)
 
+<div align="center">
+  <img src="https://media.giphy.com/media/M9gbBd9nbDrOTu1Mqx/giphy.gif" width="100"/>
+</div>
 <h1 align="center">
   <img src="https://komarev.com/ghpvc/?username=AlexGreb&style=flat-square&color=blue" alt=""/>  
 </h1>
