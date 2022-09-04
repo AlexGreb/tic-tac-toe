@@ -7,7 +7,7 @@ export const getImagePlayer = async (characterName) => {
 };
 
 export const getSizeTemplateForWin = (fieldSize) => {
-  return fieldSize > 3 ? 5 : 3;
+  return fieldSize > 7 ? 5 : 3;
 };
 
 export const getSettingsGameByMode = (mode) => {
