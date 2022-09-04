@@ -1,5 +1,5 @@
 
-# tick-tack-toe
+# tic-tac-toe
 
 
 <div align="center">
