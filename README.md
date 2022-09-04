@@ -1,6 +1,5 @@
 
 # tick-tack-toe
-<h1>The game tick tack toe</h1>
 
 
 <div align="center">
