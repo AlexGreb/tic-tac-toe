@@ -1,8 +1,8 @@
 /*!**********************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./sass/style.scss ***!
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./sass/styles.scss ***!
   \**********************************************************************************************************/
 :root {
-  --neon-text-color: #f40;
+  --neon-text-color: #ff2f00;
 }
 
 body {

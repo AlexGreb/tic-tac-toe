@@ -1,2 +1,2 @@
-# tick-tock-toe
+# tick-tack-toe
 The game tick tock toe

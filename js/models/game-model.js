@@ -168,7 +168,6 @@ class GameModel {
     };
   }
 
-  //ничья
   get isDeadHeat() {
     return this.#movesList.length === this.#numberFieldCells;
   }
@@ -205,6 +204,16 @@ class GameModel {
     return currentCell;
   }
 
+  checkCellsForWinList(symbol, winCellsList, prevCell, cell) {
+    if (symbol != null) {
+      if (winCellsList.length === 0 || symbol === prevCell.symbol) {
+        winCellsList.push(cell);
+      } else {
+        winCellsList.length = 0;
+      }
+    }
+  }
+
   checkHorizontalLine(startPosition, endPosition, col, winTemplate, direction) {
     let winCellsList = [];
     let prevCell = null;
@@ -214,14 +223,7 @@ class GameModel {
       const cell = col[i];
       const symbol = cell.symbol;
 
-      //TODO подумать как добавлять победные ячейки вынести
-      if (symbol != null) {
-        if (winCellsList.length === 0 || symbol === prevCell.symbol) {
-          winCellsList.push(cell);
-        } else {
-          winCellsList.length = 0;
-        }
-      }
+      this.checkCellsForWinList(symbol, winCellsList, prevCell, cell);
 
       prevCell = cell;
       template = template + (symbol ?? `_`);
@@ -234,7 +236,7 @@ class GameModel {
     };
   }
 
-  checkVerticalLine(startPosition, endPosition, row, winTemplate, direction, colIndex) {
+  checkVerticalLine(startPosition, endPosition, row, winTemplate, colIndex, direction) {
     let winCellsList = [];
     let prevCell = null;
     let template = ``;
@@ -243,14 +245,9 @@ class GameModel {
       const row = this.coordsCells[i];
       const cell = row[colIndex];
       const symbol = cell.symbol;
-      //TODO подумать как добавлять победные ячейки вынести
-      if (symbol != null) {
-        if (winCellsList.length === 0 || symbol === prevCell.symbol) {
-          winCellsList.push(cell);
-        } else {
-          winCellsList.length = 0;
-        }
-      }
+
+      this.checkCellsForWinList(symbol, winCellsList, prevCell, cell);
+
       prevCell = cell;
       template = template + (symbol ?? `_`);
     }
@@ -261,9 +258,8 @@ class GameModel {
       direction,
     };
   }
-  // \
-  //  \
-  checkLeftToRightDiagonal(limitCells, winTemplate, direction, coordsCells) {
+
+  checkLeftToRightDiagonal(limitCells, winTemplate, coordsCells, direction) {
     let winCellsList = [];
     let prevCell = null;
     let template = ``;
@@ -273,14 +269,9 @@ class GameModel {
       const row = coordsCells[j];
       const cell = row[i];
       const symbol = cell.symbol;
-      //TODO подумать как добавлять победные ячейки вынести
-      if (symbol != null) {
-        if (winCellsList.length === 0 || symbol === prevCell.symbol) {
-          winCellsList.push(cell);
-        } else {
-          winCellsList.length = 0;
-        }
-      }
+
+      this.checkCellsForWinList(symbol, winCellsList, prevCell, cell);
+
       prevCell = cell;
       template = template + (cell.symbol ?? `_`);
     }
@@ -291,7 +282,7 @@ class GameModel {
     };
   }
 
-  checkRightToLeftDiagonal(limitCells, winTemplate, direction, coordsCells) {
+  checkRightToLeftDiagonal(limitCells, winTemplate, coordsCells, direction) {
     let winCellsList = [];
     let prevCell = null;
     let template = ``;
@@ -301,14 +292,9 @@ class GameModel {
       const row = coordsCells[j];
       const cell = row[i];
       const symbol = cell.symbol;
-      //TODO подумать как добавлять победные ячейки вынести
-      if (symbol != null) {
-        if (winCellsList.length === 0 || symbol === prevCell.symbol) {
-          winCellsList.push(cell);
-        } else {
-          winCellsList.length = 0;
-        }
-      }
+
+      this.checkCellsForWinList(symbol, winCellsList, prevCell, cell);
+
       prevCell = cell;
       template = template + (cell.symbol ?? `_`);
     }
@@ -321,18 +307,8 @@ class GameModel {
   }
 
   checkWin(currentCell) {
-    // let i = startPosition; i <= endPosition; i++
-    // let i = startPosition; i <= endPosition; i++
-    // let i = leftLimit, j = topLimit; i <= rightLimit || j <= bottomLimit; i++, j++
-    // let i = leftLimit, j = bottomLimit; i <= rightLimit || j <= topLimit; i++, j++
-
     this.#movesList.push(currentCell);
 
-    //TODO оптимизировать
-
-    //может вызывать методы через цикл?
-
-    let result = null;
     const distanceForCheckToWin = this.#sizeTemplateForWin - 1;
     const colIndex = currentCell.colIndex - 1;
     const rowIndex = currentCell.rowIndex - 1;
@@ -353,72 +329,83 @@ class GameModel {
     let topLimit = distanceToTopBorder < 0 ? 0 : distanceToTopBorder;
     let bottomLimit = distanceToBottomBorder > rowLength ? rowLength : distanceToBottomBorder;
 
-    // по горизонтали
-    result = this.checkHorizontalLine(leftLimit, rightLimit, row, winTemplate, this.winDirections.LEFT_TO_RIGHT);
-    if (result.isWin) {
-      result.gameStatus = this.#gameStatuses.PLAYER_WIN;
-      return result;
+    let resultChecking = null;
+    for (let direction of Object.values(this.winDirections)) {
+      if (resultChecking != null && resultChecking.isWin) {
+        break;
+      }
+      switch (direction) {
+        case this.winDirections.LEFT_TO_RIGHT:
+          resultChecking = this.checkHorizontalLine(leftLimit, rightLimit, row, winTemplate, this.winDirections.LEFT_TO_RIGHT);
+          break;
+
+        case this.winDirections.TOP_TO_BOTTOM:
+          resultChecking = this.checkVerticalLine(topLimit, bottomLimit, row, winTemplate, colIndex, this.winDirections.TOP_TO_BOTTOM);
+          break;
+
+        case this.winDirections.LEFT_TOP_TO_RIGHT_BOTTOM:
+          {
+            distanceToTopBorder = Math.abs(0 - rowIndex);
+            distanceToLeftBorder = Math.abs(0 - colIndex);
+
+            distanceToBottomBorder = Math.abs(rowLength - rowIndex);
+            distanceToRightBorder = Math.abs(rowLength - colIndex);
+
+            const leftTopLimit = Math.min(distanceToTopBorder, distanceToLeftBorder, distanceForCheckToWin);
+            const rightBottomLimit = Math.min(distanceToBottomBorder, distanceToRightBorder, distanceForCheckToWin);
+
+            topLimit = rowIndex - leftTopLimit;
+            bottomLimit = rowIndex + rightBottomLimit;
+            leftLimit = colIndex - leftTopLimit;
+            rightLimit = colIndex + rightBottomLimit;
+
+            let limitCells = {
+              topLimit,
+              bottomLimit,
+              leftLimit,
+              rightLimit,
+            };
+            resultChecking = this.checkLeftToRightDiagonal(
+              limitCells,
+              winTemplate,
+              this.coordsCells,
+              this.winDirections.LEFT_TOP_TO_RIGHT_BOTTOM
+            );
+          }
+
+          break;
+
+        case this.winDirections.RIGHT_TOP_TO_LEFT_BOTTOM: {
+          const rightTopLimit = Math.min(distanceToTopBorder, distanceToRightBorder, distanceForCheckToWin);
+          const leftBottomLimit = Math.min(distanceToBottomBorder, distanceToLeftBorder, distanceForCheckToWin);
+
+          topLimit = rowIndex - rightTopLimit;
+          bottomLimit = rowIndex + leftBottomLimit;
+          leftLimit = colIndex - leftBottomLimit;
+          rightLimit = colIndex + rightTopLimit;
+
+          const limitCells = {
+            topLimit,
+            bottomLimit,
+            leftLimit,
+            rightLimit,
+          };
+
+          resultChecking = this.checkRightToLeftDiagonal(
+            limitCells,
+            winTemplate,
+            this.coordsCells,
+            this.winDirections.RIGHT_TOP_TO_LEFT_BOTTOM
+          );
+        }
+      }
     }
 
-    //по вертикали
-
-    result = this.checkVerticalLine(topLimit, bottomLimit, row, winTemplate, this.winDirections.TOP_TO_BOTTOM, colIndex);
-    if (result.isWin) {
-      result.gameStatus = this.#gameStatuses.PLAYER_WIN;
-      return result;
+    if (resultChecking != null && resultChecking.isWin) {
+      resultChecking.gameStatus = this.#gameStatuses.PLAYER_WIN;
+      return resultChecking;
     }
 
-    //по диагонали слева -> направо
-    distanceToTopBorder = Math.abs(0 - rowIndex);
-    distanceToLeftBorder = Math.abs(0 - colIndex);
-
-    distanceToBottomBorder = Math.abs(rowLength - rowIndex);
-    distanceToRightBorder = Math.abs(rowLength - colIndex);
-
-    const leftTopLimit = Math.min(distanceToTopBorder, distanceToLeftBorder, distanceForCheckToWin);
-    const rightBottomLimit = Math.min(distanceToBottomBorder, distanceToRightBorder, distanceForCheckToWin);
-
-    topLimit = rowIndex - leftTopLimit;
-    bottomLimit = rowIndex + rightBottomLimit;
-    leftLimit = colIndex - leftTopLimit;
-    rightLimit = colIndex + rightBottomLimit;
-
-    let limitCells = {
-      topLimit,
-      bottomLimit,
-      leftLimit,
-      rightLimit,
-    };
-
-    result = this.checkLeftToRightDiagonal(limitCells, winTemplate, this.winDirections.LEFT_TOP_TO_RIGHT_BOTTOM, this.coordsCells);
-    if (result.isWin) {
-      result.gameStatus = this.#gameStatuses.PLAYER_WIN;
-      return result;
-    }
-
-    const rightTopLimit = Math.min(distanceToTopBorder, distanceToRightBorder, distanceForCheckToWin);
-    const leftBottomLimit = Math.min(distanceToBottomBorder, distanceToLeftBorder, distanceForCheckToWin);
-
-    topLimit = rowIndex - rightTopLimit;
-    bottomLimit = rowIndex + leftBottomLimit;
-    leftLimit = colIndex - leftBottomLimit;
-    rightLimit = colIndex + rightTopLimit;
-
-    limitCells = {
-      topLimit,
-      bottomLimit,
-      leftLimit,
-      rightLimit,
-    };
-
-    result = this.checkRightToLeftDiagonal(limitCells, winTemplate, this.winDirections.RIGHT_TOP_TO_LEFT_BOTTOM, this.coordsCells);
-
-    if (result.isWin) {
-      result.gameStatus = this.#gameStatuses.PLAYER_WIN;
-      return result;
-    }
-
-    //TODO add to const
     if (this.isDeadHeat) {
       return {
         gameStatus: this.#gameStatuses.END,

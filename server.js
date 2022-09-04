@@ -42,9 +42,11 @@ function onConnect(wsClient, req) {
     try {
       switch (reqMessage.type) {
         case messageType.OFFER:
-          const client = wsClients.get(clientId);
-          client.offer = reqMessage.payload.offer;
-          createGame(reqMessage.payload.offer, reqMessage.payload.initiatorId);
+          {
+            const client = wsClients.get(clientId);
+            client.offer = reqMessage.payload.offer;
+            createGame(reqMessage.payload.offer, reqMessage.payload.initiatorId);
+          }
           break;
 
         case messageType.FIND_GAME:
@@ -85,7 +87,7 @@ function onConnect(wsClient, req) {
       console.log('Ошибка', error);
     }
   });
-  wsClient.on('close', (e) => {
+  wsClient.on('close', () => {
     for (let [id, clientData] of wsClients) {
       if (clientData.client === wsClient) {
         wsClients.delete(id);
@@ -125,6 +127,7 @@ function createGame(offer, clientId) {
 function findGame(searchingClient) {
   if (wsClients.size > 0) {
     for (let [key, value] of wsClients) {
+      console.log(value);
       if (value.status === `createGame`) {
         const wsClient = wsClients.get(key);
 

@@ -1,77 +1,75 @@
 import AbstractView from '../abstract-view.js';
 import getCharactersListTemplate from '../../templates/characters-list.js';
-import {getModalSearchingGame} from '../../modals/modal-searching-game.js';
-import {gameMode} from '../../data/settings.js';
-
+import { getModalSearchingGame } from '../../modals/modal-searching-game.js';
+import { gameMode } from '../../data/settings.js';
 
 export const settingsViewEvents = {
-    SAVE_SETTINGS: `saveSettings`,
-    BACK: `back`
-}
-
+  SAVE_SETTINGS: `saveSettings`,
+  BACK: `back`,
+};
 
 class SettingsView extends AbstractView {
-    #form = null;
-    #backBtn = null;
+  #form = null;
+  #backBtn = null;
 
-    constructor(settings) {
-        super();
+  constructor(settings) {
+    super();
 
-        this.settings = settings;
-        this.onSaveSettings = this.onSaveSettings.bind(this);
-    }
+    this.settings = settings;
+    this.onSaveSettings = this.onSaveSettings.bind(this);
+  }
 
-    showCreateGameModal = (onCancelCallback) => {
-        this.createGameModal = getModalSearchingGame(`Ищем игру...`, onCancelCallback);
-        this.createGameModal.show();
-    };
+  showCreateGameModal = (onCancelCallback) => {
+    this.createGameModal = getModalSearchingGame(`Ищем игру...`, onCancelCallback);
+    this.createGameModal.show();
+  };
 
-    hideCreateGameModal = () => {
-        this.createGameModal.hide();
-    }
+  hideCreateGameModal = () => {
+    this.createGameModal.hide();
+  };
 
-    onSaveSettings(e) {
-        e.preventDefault();
-        const mode = e.submitter.classList.contains(`js-start-game-online-btn`) ? gameMode.ONLINE : gameMode.OFFLINE;
-        const formData = new FormData(this.#form);
-        this.emit(settingsViewEvents.SAVE_SETTINGS, {
-            formData,
-            gameMode: mode
-        });
-    }
+  onSaveSettings(e) {
+    e.preventDefault();
+    const mode = e.submitter.classList.contains(`js-start-game-online-btn`) ? gameMode.ONLINE : gameMode.OFFLINE;
+    const formData = new FormData(this.#form);
+    this.emit(settingsViewEvents.SAVE_SETTINGS, {
+      formData,
+      gameMode: mode,
+    });
+  }
 
+  bind(element) {
+    this.#form = element.querySelector(`.js-settings-form`);
+    this.#form.addEventListener(`submit`, this.onSaveSettings);
+    this.#backBtn = element.querySelector(`.js-back-btn`);
+    this.#backBtn.addEventListener(`click`, this.onBackBtnHandler);
+  }
 
-    bind(element) {
-        this.#form = element.querySelector(`.js-settings-form`);
-        this.#form.addEventListener(`submit`, this.onSaveSettings);
-        this.#backBtn = element.querySelector(`.js-back-btn`);
-        this.#backBtn.addEventListener(`click`, this.onBackBtnHandler);
-    }
+  unbind() {
+    this.#form.removeEventListener(`submit`, this.onSaveSettings);
+    this.#backBtn.removeEventListener(`click`, this.onBackBtnHandler);
+  }
 
-    unbind() {
-        this.#form.removeEventListener(`submit`, this.onSaveSettings);
-        this.#backBtn.removeEventListener(`click`, this.onBackBtnHandler);
-    }
+  onBackBtnHandler = (e) => {
+    e.preventDefault();
+    this.emit(settingsViewEvents.BACK);
+  };
 
-    onBackBtnHandler = (e) => {
-        e.preventDefault();
-        this.emit(settingsViewEvents.BACK);
-    }
-
-    renderFormFields(formFields) {
-        return formFields.map((field, indexFormControl) => {
-            if(field.type === `radio`){
-                return `<section class="settings-block">
+  renderFormFields(formFields) {
+    return formFields
+      .map((field, indexFormControl) => {
+        if (field.type === `radio`) {
+          return `<section class="settings-block">
                     <h2 class="subtitle settings-block__title">
                         ${field.label}
                     </h2>
                     <div class="character">
                         ${getCharactersListTemplate(field.items, indexFormControl)}
                     </div>
-                </section>`
-            }
-            if(field.type === `input`) {
-                return `<section class="settings-block">
+                </section>`;
+        }
+        if (field.type === `input`) {
+          return `<section class="settings-block">
                     <h2 class="subtitle settings-block__title">
                         ${field.label}
                     </h2>
@@ -86,26 +84,25 @@ class SettingsView extends AbstractView {
                             </span>
                         </label>
                     </div>
-                </section>`
-            }
-        }).join(``);
-    }
+                </section>`;
+        }
+      })
+      .join(``);
+  }
 
-
-    renderBtn(mode) {
-        const isOnlineMode = mode === gameMode.ONLINE;
-        const className = isOnlineMode ? ` js-start-game-online-btn` : ``;
-        const btnText = isOnlineMode ? `Создать` : `Играть`;
-        return (`
+  renderBtn(mode) {
+    const isOnlineMode = mode === gameMode.ONLINE;
+    const className = isOnlineMode ? ` js-start-game-online-btn` : ``;
+    const btnText = isOnlineMode ? `Создать` : `Играть`;
+    return `
             <button class="btn${className} settings-view__start-btn">
                 ${btnText}
             </button>
-        `);
-    }
+        `;
+  }
 
-    get template() {
-        return (
-            `<article class="settings-view">
+  get template() {
+    return `<article class="settings-view">
                 <h1 class="settings-view__title page-title">
                     Настройки
                 </h1>
@@ -120,8 +117,8 @@ class SettingsView extends AbstractView {
                         ${this.renderBtn(this.settings.gameMode)}
                     <section>
                 </form>
-            </article>`);
-    }
+            </article>`;
+  }
 }
 
 export default SettingsView;

@@ -21,7 +21,7 @@ class GameScreen {
   }
 
   onClickGameField = async (e) => {
-    // если чужой ход или игра закончилась е обрабатывать клик по полю
+    // если чужой ход или игра закончилась не обрабатывать клик по полю
     if (this.gameModel.isFreeze || this.gameModel.gameStatus === this.gameModel.gameStatuses.END) {
       return;
     }
@@ -115,6 +115,7 @@ class GameScreen {
         await this.move(message.payload.cell, false);
         break;
       case messageType.RETRY:
+        this.unsubscribeDataChannel();
         this.startGame();
         break;
     }
@@ -146,16 +147,29 @@ class GameScreen {
     if (this.gameModel.isOnlineMode) {
       const message = createMessage(messageType.RETRY);
       this.#connection.sendMessage(message);
+      this.unsubscribeDataChannel();
     }
-    this.unsubscribeClickGameField();
-    this.unsubscribeRetry();
-
     this.destroyListeners();
     this.startGame();
   };
 
+  backToMainPage = () => {
+    if (this.gameModel.isOnlineMode) {
+      this.unsubscribeDataChannel();
+      this.#connection.closeConnect();
+    }
+    this.destroyListeners();
+    Router.showWelcome();
+  };
+
+  unsubscribeDataChannel() {
+    this.unsubscribeMessageDataChannel();
+    this.unsubscribeCloseDataChannel();
+  }
+
   destroyListeners() {
     this.unsubscribeClickGameField();
+    this.unsubscribeBackToMain();
     this.unsubscribeRetry();
     this.gameView.unbind();
   }
@@ -178,6 +192,7 @@ class GameScreen {
 
     this.unsubscribeClickGameField = this.gameView.subscribe(gameViewEvents.CLICK_GAME_FIELD, this.onClickGameField);
     this.unsubscribeRetry = this.gameView.subscribe(gameViewEvents.CLICK_RETRY, this.retryGame);
+    this.unsubscribeBackToMain = this.gameView.subscribe(gameViewEvents.CLICK_TO_MAIN, this.backToMainPage);
     this.gameView.changeMoveStatusText(this.gameModel.gameStatusText);
     this.onStartCallback(this.element);
   }

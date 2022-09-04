@@ -50,7 +50,7 @@ class WebSocketConnector extends EventEmitter {
   };
 
   onError = (error) => {
-    alert(`[error] ${error.message}`);
+    // alert(`[error] ${error}`);
     this.emit(webSocketEvents.ERROR, error);
   };
 }

@@ -1,48 +1,49 @@
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
-
-/***/ "./js/utils/dom/render.js":
-/*!********************************!*\
+/******/ (() => {
+  // webpackBootstrap
+  /******/ 'use strict';
+  /******/ var __webpack_modules__ = {
+    /***/ './js/utils/dom/render.js':
+      /*!********************************!*\
   !*** ./js/utils/dom/render.js ***!
   \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+      /***/ (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ default: () => __WEBPACK_DEFAULT_EXPORT__,
+          /* harmony export */
+        });
+        const render = (containerElement, element) => {
+          containerElement.innerHTML = ``;
+          containerElement.appendChild(element);
+        };
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-const render = (containerElement, element) => {
-  containerElement.innerHTML = ``;
-  containerElement.appendChild(element);
-};
+        /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = render;
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (render);
+        /***/
+      },
 
-/***/ }),
-
-/***/ "./js/views/settings.js":
-/*!******************************!*\
+    /***/ './js/views/settings.js':
+      /*!******************************!*\
   !*** ./js/views/settings.js ***!
   \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+      /***/ (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ getSettingsScreenElement: () => /* binding */ getSettingsScreenElement,
+          /* harmony export */ getSettingsScreenTemplate: () => /* binding */ getSettingsScreenTemplate,
+          /* harmony export */ bindSettingsScreen: () => /* binding */ bindSettingsScreen,
+          /* harmony export */
+        });
+        const getSettingsScreenElement = () => {
+          const _element = document.createElement(`div`);
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getSettingsScreenElement": () => (/* binding */ getSettingsScreenElement),
-/* harmony export */   "getSettingsScreenTemplate": () => (/* binding */ getSettingsScreenTemplate),
-/* harmony export */   "bindSettingsScreen": () => (/* binding */ bindSettingsScreen)
-/* harmony export */ });
-const getSettingsScreenElement = () => {
-  const _element = document.createElement(`div`);
+          const template = getSettingsScreenTemplate();
+          _element.innerHTML = template;
+          return _element;
+        };
 
-  const template = getSettingsScreenTemplate();
-  _element.innerHTML = template;
-  return _element;
-};
-
-const getSettingsScreenTemplate = () => {
-  return `<article class="settings-screen">
+        const getSettingsScreenTemplate = () => {
+          return `<article class="settings-screen">
     <h1 class="settings-screen__title">
         Настройки
     </h1>
@@ -128,41 +129,40 @@ const getSettingsScreenTemplate = () => {
         </button>
     <section>
 </article>`;
-};
+        };
 
-const bindSettingsScreen = _element => {};
+        const bindSettingsScreen = (_element) => {};
 
+        /***/
+      },
 
-
-/***/ }),
-
-/***/ "./js/views/welcome.js":
-/*!*****************************!*\
+    /***/ './js/views/welcome.js':
+      /*!*****************************!*\
   !*** ./js/views/welcome.js ***!
   \*****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+      /***/ (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        __webpack_require__.r(__webpack_exports__);
+        /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+          /* harmony export */ getWelcomeScreenElement: () => /* binding */ getWelcomeScreenElement,
+          /* harmony export */ getWelcomeScreenTemplate: () => /* binding */ getWelcomeScreenTemplate,
+          /* harmony export */ bindWelcomeScreen: () => /* binding */ bindWelcomeScreen,
+          /* harmony export */
+        });
+        /* harmony import */ var _utils_dom_render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+          /*! ../utils/dom/render */ './js/utils/dom/render.js'
+        );
+        /* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings */ './js/views/settings.js');
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getWelcomeScreenElement": () => (/* binding */ getWelcomeScreenElement),
-/* harmony export */   "getWelcomeScreenTemplate": () => (/* binding */ getWelcomeScreenTemplate),
-/* harmony export */   "bindWelcomeScreen": () => (/* binding */ bindWelcomeScreen)
-/* harmony export */ });
-/* harmony import */ var _utils_dom_render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/dom/render */ "./js/utils/dom/render.js");
-/* harmony import */ var _settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./settings */ "./js/views/settings.js");
+        const getWelcomeScreenElement = () => {
+          const _element = document.createElement(`div`);
 
+          const template = getWelcomeScreenTemplate();
+          _element.innerHTML = template;
+          return _element;
+        };
 
-
-const getWelcomeScreenElement = () => {
-  const _element = document.createElement(`div`);
-
-  const template = getWelcomeScreenTemplate();
-  _element.innerHTML = template;
-  return _element;
-};
-
-const getWelcomeScreenTemplate = () => {
-  return `<article class="welcome-screen">
+        const getWelcomeScreenTemplate = () => {
+          return `<article class="welcome-screen">
         <h1 class="welcome-screen__title">
             Крестики <span>X</span> Н<span>о</span>лики
         </h1>
@@ -172,122 +172,136 @@ const getWelcomeScreenTemplate = () => {
             Начать игру
         </button>
     </article>`;
-};
+        };
 
-const bindWelcomeScreen = _element => {
-  _element.querySelector(`.welcome-screen__btn`).addEventListener(`click`, e => {
-    e.preventDefault();
-    const settingsScreenElement = (0,_settings__WEBPACK_IMPORTED_MODULE_1__.getSettingsScreenElement)();
-    (0,_utils_dom_render__WEBPACK_IMPORTED_MODULE_0__.default)(document.body, settingsScreenElement);
-  });
-};
+        const bindWelcomeScreen = (_element) => {
+          _element.querySelector(`.welcome-screen__btn`).addEventListener(`click`, (e) => {
+            e.preventDefault();
+            const settingsScreenElement = (0, _settings__WEBPACK_IMPORTED_MODULE_1__.getSettingsScreenElement)();
+            (0, _utils_dom_render__WEBPACK_IMPORTED_MODULE_0__.default)(document.body, settingsScreenElement);
+          });
+        };
 
+        /***/
+      },
 
-
-/***/ }),
-
-/***/ "./sass/button.scss":
-/*!**************************!*\
+    /***/ './sass/button.scss':
+      /*!**************************!*\
   !*** ./sass/button.scss ***!
   \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+      /***/ (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        __webpack_require__.r(__webpack_exports__);
+        // extracted by mini-css-extract-plugin
 
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
+        /***/
+      },
 
-
-/***/ }),
-
-/***/ "./sass/style.scss":
-/*!*************************!*\
-  !*** ./sass/style.scss ***!
+    /***/ './sass/style.scss':
+      /*!*************************!*\
+  !*** ./sass/styles.scss ***!
   \*************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+      /***/ (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+        __webpack_require__.r(__webpack_exports__);
+        // extracted by mini-css-extract-plugin
 
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
+        /***/
+      },
 
-
-/***/ })
-
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-/*!********************!*\
+    /******/
+  };
+  /************************************************************************/
+  /******/ // The module cache
+  /******/ var __webpack_module_cache__ = {};
+  /******/
+  /******/ // The require function
+  /******/ function __webpack_require__(moduleId) {
+    /******/ // Check if module is in cache
+    /******/ var cachedModule = __webpack_module_cache__[moduleId];
+    /******/ if (cachedModule !== undefined) {
+      /******/ return cachedModule.exports;
+      /******/
+    }
+    /******/ // Create a new module (and put it into the cache)
+    /******/ var module = (__webpack_module_cache__[moduleId] = {
+      /******/ // no module.id needed
+      /******/ // no module.loaded needed
+      /******/ exports: {},
+      /******/
+    });
+    /******/
+    /******/ // Execute the module function
+    /******/ __webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+    /******/
+    /******/ // Return the exports of the module
+    /******/ return module.exports;
+    /******/
+  }
+  /******/
+  /************************************************************************/
+  /******/ /* webpack/runtime/define property getters */
+  /******/ (() => {
+    /******/ // define getter functions for harmony exports
+    /******/ __webpack_require__.d = (exports, definition) => {
+      /******/ for (var key in definition) {
+        /******/ if (__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+          /******/ Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+          /******/
+        }
+        /******/
+      }
+      /******/
+    };
+    /******/
+  })();
+  /******/
+  /******/ /* webpack/runtime/hasOwnProperty shorthand */
+  /******/ (() => {
+    /******/ __webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
+    /******/
+  })();
+  /******/
+  /******/ /* webpack/runtime/make namespace object */
+  /******/ (() => {
+    /******/ // define __esModule on exports
+    /******/ __webpack_require__.r = (exports) => {
+      /******/ if (typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+        /******/ Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+        /******/
+      }
+      /******/ Object.defineProperty(exports, '__esModule', { value: true });
+      /******/
+    };
+    /******/
+  })();
+  /******/
+  /************************************************************************/
+  var __webpack_exports__ = {};
+  // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+  (() => {
+    /*!********************!*\
   !*** ./js/main.js ***!
   \********************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _js_utils_dom_render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../js/utils/dom/render */ "./js/utils/dom/render.js");
-/* harmony import */ var _js_views_welcome__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../js/views/welcome */ "./js/views/welcome.js");
-/* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../sass/style.scss */ "./sass/style.scss");
-/* harmony import */ var _sass_button_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../sass/button.scss */ "./sass/button.scss");
+    __webpack_require__.r(__webpack_exports__);
+    /* harmony import */ var _js_utils_dom_render__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(
+      /*! ../js/utils/dom/render */ './js/utils/dom/render.js'
+    );
+    /* harmony import */ var _js_views_welcome__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(
+      /*! ../js/views/welcome */ './js/views/welcome.js'
+    );
+    /* harmony import */ var _sass_style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
+      /*! ../sass/styles.scss */ './sass/style.scss'
+    );
+    /* harmony import */ var _sass_button_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+      /*! ../sass/button.scss */ './sass/button.scss'
+    );
 
+    window.addEventListener(`load`, () => {
+      const welcomeScreenElement = (0, _js_views_welcome__WEBPACK_IMPORTED_MODULE_1__.getWelcomeScreenElement)();
+      (0, _js_views_welcome__WEBPACK_IMPORTED_MODULE_1__.bindWelcomeScreen)(welcomeScreenElement);
+      (0, _js_utils_dom_render__WEBPACK_IMPORTED_MODULE_0__.default)(document.body, welcomeScreenElement);
+    });
+  })();
 
-
-
-window.addEventListener(`load`, () => {
-  const welcomeScreenElement = (0,_js_views_welcome__WEBPACK_IMPORTED_MODULE_1__.getWelcomeScreenElement)();
-  (0,_js_views_welcome__WEBPACK_IMPORTED_MODULE_1__.bindWelcomeScreen)(welcomeScreenElement);
-  (0,_js_utils_dom_render__WEBPACK_IMPORTED_MODULE_0__.default)(document.body, welcomeScreenElement);
-});
+  /******/
 })();
-
-/******/ })()
-;
 //# sourceMappingURL=bundle.js.map

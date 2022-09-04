@@ -13,16 +13,14 @@ export const peerConnectorEvents = {
   CLOSE_DATA_CHANNEL: `closeDataChannel`,
 };
 
-// TODO как то убрать
 let resolveFn;
 const promise = new Promise((resolve) => {
   resolveFn = resolve;
 });
-//
 
 class PeerConnector extends EventEmitter {
   #channel = null;
-  #localIceCondidateList = [];
+  #localIceCandidateList = [];
   #peerConnection = null;
   #initiatorId = null;
   #recipientId = null;
@@ -54,10 +52,6 @@ class PeerConnector extends EventEmitter {
 
   set recipientId(id) {
     this.#recipientId = id;
-  }
-
-  get iceCandidateList() {
-    return this.#localIceCondidateList;
   }
 
   create() {
@@ -97,21 +91,21 @@ class PeerConnector extends EventEmitter {
   };
 
   onMessageDataChannel = (e) => {
-    // try {
-    const message = JSON.parse(e.data);
-    this.emit(peerConnectorEvents.MESSAGE_DATA_CHANNEL, message);
-    // } catch(error) {
-    //     throw new Error(error);
-    // }
+    try {
+      const message = JSON.parse(e.data);
+      this.emit(peerConnectorEvents.MESSAGE_DATA_CHANNEL, message);
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   sendData(data) {
-    // try {
-    const message = JSON.stringify(data);
-    this.#channel.send(message);
-    // } catch(error) {
-    //     throw new Error(error);
-    // }
+    try {
+      const message = JSON.stringify(data);
+      this.#channel.send(message);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   createDataChannel(name) {
@@ -135,20 +129,20 @@ class PeerConnector extends EventEmitter {
     return answer;
   }
 
-  onConnectionStateChange = (e) => {
+  onConnectionStateChange = () => {
     if (this.#peerConnection.connectionState === `connected`) {
       this.socket.close();
     }
     this.emit(peerConnectorEvents.CONNECTION_STATE_CHANGE, this.#peerConnection.connectionState);
   };
 
-  onIceConnectionStateChange = (e) => {
+  onIceConnectionStateChange = () => {
     this.emit(peerConnectorEvents.ICE_CONNECTION_STATE_CHANGE, this.#peerConnection.iceConnectionState);
   };
 
   onIceCandidate = (event) => {
     if (event.candidate) {
-      this.#localIceCondidateList.push(event.candidate);
+      this.#localIceCandidateList.push(event.candidate);
     } else {
       this.clearConnectionTimeout();
       resolveFn();
@@ -159,7 +153,7 @@ class PeerConnector extends EventEmitter {
   sendIceCandidates() {
     const message = createMessage(messageType.ICE_CANDIDATE, {
       clientId: this.isInitiator ? this.recipientId : this.initiatorId,
-      iceCondidateList: this.#localIceCondidateList,
+      iceCandidateList: this.#localIceCandidateList,
     });
 
     this.socket.send(message);
@@ -176,29 +170,30 @@ class PeerConnector extends EventEmitter {
   onSocketMessage = async (message) => {
     switch (message.type) {
       case messageType.INIT_USER:
-        const clientId = message.payload.clientId;
-        if (this.isInitiator) {
-          this.initiatorId = clientId;
-          const offer = await this.createOffer();
-          const responseMessage = createMessage(messageType.OFFER, {
-            offer,
-            initiatorId: this.initiatorId,
-          });
+        {
+          const clientId = message.payload.clientId;
+          if (this.isInitiator) {
+            this.initiatorId = clientId;
+            const offer = await this.createOffer();
+            const responseMessage = createMessage(messageType.OFFER, {
+              offer,
+              initiatorId: this.initiatorId,
+            });
 
-          this.socket.send(responseMessage);
-          this.setConnectionTimeout();
-        } else {
-          this.recipientId = clientId;
-          const responseMessage = createMessage(messageType.FIND_GAME);
-          this.socket.send(responseMessage);
-          this.setConnectionTimeout();
+            this.socket.send(responseMessage);
+            this.setConnectionTimeout();
+          } else {
+            this.recipientId = clientId;
+            const responseMessage = createMessage(messageType.FIND_GAME);
+            this.socket.send(responseMessage);
+            this.setConnectionTimeout();
+          }
         }
         break;
 
       case messageType.ICE_CANDIDATE:
-        console.log(`ice condidate`);
         this.clearConnectionTimeout();
-        message.payload.iceCondidateList.forEach((candidate) => {
+        message.payload.iceCandidateList.forEach((candidate) => {
           this.addIceCandidate(candidate);
         });
         break;

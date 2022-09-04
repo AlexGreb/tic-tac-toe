@@ -5,16 +5,18 @@ import { getImagePlayer } from '../../helpers/settings/settings-helper.js';
 export const gameViewEvents = {
   CLICK_GAME_FIELD: `clickGameField`,
   CLICK_RETRY: `retry`,
+  CLICK_TO_MAIN: `clickToMain`,
 };
 
 class GameView extends AbstractView {
   #gameField = null;
   #retryBtn = null;
   #playerImages = new Map();
+  #ctx = null;
+  #backToMainBtn = null;
 
   constructor(fieldSettings) {
     super();
-    // this.fieldSettings = fieldSettings;
     this.cellHeight = fieldSettings.cellHeight;
     this.cellWidth = fieldSettings.cellWidth;
     this.lineWidth = fieldSettings.lineWidth;
@@ -33,6 +35,11 @@ class GameView extends AbstractView {
     this.emit(gameViewEvents.CLICK_RETRY, e);
   };
 
+  handleBackToMain = (e) => {
+    e.preventDefault();
+    this.emit(gameViewEvents.CLICK_TO_MAIN, e);
+  };
+
   changeMoveStatusText = (statusText) => {
     if (this.moveStatusEl == null) {
       this.moveStatusEl = this.element.querySelector(`.js-move-status`);
@@ -43,19 +50,25 @@ class GameView extends AbstractView {
   bind(element) {
     this.#gameField = element.querySelector(`#gameCanvas`);
     this.#retryBtn = element.querySelector(`.js-retry-btn`);
+    this.#backToMainBtn = element.querySelector(`.js-back-to-main-btn`);
     this.#gameField.addEventListener(`click`, this.handleClickCanvas);
     this.#retryBtn.addEventListener(`click`, this.handleRetry);
+    this.#backToMainBtn.addEventListener(`click`, this.handleBackToMain);
   }
 
   unbind() {
     this.#gameField.removeEventListener(`click`, this.handleClickCanvas);
     this.#retryBtn.removeEventListener(`click`, this.handleRetry);
+    this.#backToMainBtn.removeEventListener(`click`, this.handleBackToMain);
   }
 
   get template() {
     return `
             <article class="game-view">
                 <h1 class="page-title">Игра</h1>
+                <div class="game-view__back-to-main">
+                    <button class="game-view__back-to-main-btn js-back-to-main-btn btn-back" type="button">Выйти на главную</button>
+                </div>
                 <button type="button" class="btn game-view__retry-btn js-retry-btn" hidden>Заново</button>
                 <h2 class="game-view__move-status js-move-status"></h2>
                 <canvas id="gameCanvas"></canvas>
@@ -64,7 +77,7 @@ class GameView extends AbstractView {
   }
 
   drawGameField() {
-    const ctx = this.ctx;
+    const ctx = this.#ctx;
 
     ctx.beginPath();
     ctx.strokeStyle = colorLineGrid;
@@ -101,7 +114,7 @@ class GameView extends AbstractView {
 
   async drawImgInCell(cell, nameImg, widthImg, heightImg) {
     const playerImage = await this.renderImage(nameImg);
-    const ctx = this.ctx;
+    const ctx = this.#ctx;
     const x = cell.coords[0];
     const y = cell.coords[1];
     let x1 = x[0];
@@ -117,7 +130,7 @@ class GameView extends AbstractView {
   }
 
   renderWinLine(coordsWinLine) {
-    const ctx = this.ctx;
+    const ctx = this.#ctx;
     ctx.lineWidth = 4;
     const { startX1Coords, startX2Coords, endY1Coords, endY2Coords } = coordsWinLine;
 
@@ -136,8 +149,8 @@ class GameView extends AbstractView {
   postRender() {
     this.#gameField.setAttribute(`width`, this.widthField);
     this.#gameField.setAttribute(`height`, this.heightField);
-    this.ctx = this.#gameField.getContext(`2d`);
-    this.ctx.lineWidth = this.lineWidth;
+    this.#ctx = this.#gameField.getContext(`2d`);
+    this.#ctx.lineWidth = this.lineWidth;
     this.drawGameField();
   }
 }

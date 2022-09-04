@@ -17,10 +17,7 @@ class WelcomeView extends AbstractView {
   }
 
   showFindGameModal = (onCancelCallback) => {
-    this.findGameModal = getModalSearchingGame(
-      `Ищем игру...`,
-      onCancelCallback
-    );
+    this.findGameModal = getModalSearchingGame(`Ищем игру...`, onCancelCallback);
     this.findGameModal.show();
   };
 
@@ -49,19 +46,13 @@ class WelcomeView extends AbstractView {
     this.#findGameBtn = element.querySelector(`.js-find-game-btn`);
     this.#findGameBtn.addEventListener(`click`, this.handleClickFindGameBtn);
     this.#createGameBtn = element.querySelector(`.js-reate-game-btn`);
-    this.#createGameBtn.addEventListener(
-      `click`,
-      this.handleClickCreateGameBtn
-    );
+    this.#createGameBtn.addEventListener(`click`, this.handleClickCreateGameBtn);
   }
 
   unbind() {
     this.#btnStart.removeEventListener(`click`, this.handleClickStartBtn);
     this.#findGameBtn.removeEventListener(`click`, this.handleClickFindGameBtn);
-    this.#createGameBtn.removeEventListener(
-      `click`,
-      this.handleClickCreateGameBtn
-    );
+    this.#createGameBtn.removeEventListener(`click`, this.handleClickCreateGameBtn);
   }
 
   get template() {

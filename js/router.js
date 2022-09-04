@@ -18,11 +18,6 @@ class Router {
     changeView(settingsScreen.element);
   }
 
-  // static showGameNetworkSettings(gameMode) {
-  //     const settingsScreen = new SettingsScreen(gameMode);
-  //     changeView(settingsScreen.element);
-  // }
-
   static showGame(gameSettings, connection) {
     new GameScreen(gameSettings, changeView, connection);
   }
