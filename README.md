@@ -4,7 +4,6 @@
 
 
 <h1 align="center">
-  hey there
   <img src="https://komarev.com/ghpvc/?username=AlexGreb&style=flat-square&color=blue" alt=""/>  
 </h1>
 
