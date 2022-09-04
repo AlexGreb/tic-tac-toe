@@ -1,7 +1,11 @@
+
+# tick-tack-toe
+<h1>The game tick tack toe</h1>
+
+
 <div align="center">
   <img src="https://media.giphy.com/media/dWesBcTLavkZuG35MI/giphy.gif" width="600" height="300"/>
 </div>
-
 
 ### :man_technologist: About Me : I am a Frontend Developer <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30">.
 
@@ -35,9 +39,3 @@
 <h1 align="center">
   <img src="https://komarev.com/ghpvc/?username=AlexGreb&style=flat-square&color=blue" alt=""/>  
 </h1>
-
-
-
-
-# tick-tack-toe
-The game tick tock toe
