@@ -28,10 +28,7 @@
 
 ### :fire: My Stats :
 
-[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com?user=AlexGreb/&theme=dark&background=000000)](https://git.io/streak-stats)
-
-
-https://github-readme-streak-stats.herokuapp.com/?user=AlexGreb
+[![GitHub Streak](http://github-readme-streak-stats.herokuapp.com?user=AlexGreb&theme=dark&hide_border=true)](https://git.io/streak-stats)
 
 <h1 align="center">
   <img src="https://komarev.com/ghpvc/?username=AlexGreb&style=flat-square&color=blue" alt=""/>  
