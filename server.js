@@ -127,7 +127,6 @@ function createGame(offer, clientId) {
 function findGame(searchingClient) {
   if (wsClients.size > 0) {
     for (let [key, value] of wsClients) {
-      console.log(value);
       if (value.status === `createGame`) {
         const wsClient = wsClients.get(key);
 
