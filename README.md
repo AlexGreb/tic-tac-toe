@@ -1,6 +1,24 @@
 
 # tic-tac-toe
 
+В проекте использовался паттерн MPV.
+Для игры по локальной сети используется WebRTC и WebSocoket
+
+# Запуск
+
+Скачать git clone https://github.com/AlexGreb/tic-tac-toe.git
+
+Установить
+<h3><code>npm i</code></h3>
+
+Запустить в директории проекта
+<h3><code>npm start</code></h3>
+
+Для игры по локальной сети запустить
+
+<h3><code>node server.js</code></h3>
+
+---
 
 <div align="center">
   <img src="https://media.giphy.com/media/dWesBcTLavkZuG35MI/giphy.gif" width="600" height="300"/>
