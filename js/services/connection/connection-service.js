@@ -1,6 +1,6 @@
 import WebSocketConnector, { webSocketEvents } from '../../network/websocket.js';
 import PeerConnector, { peerConnectorEvents } from '../../network/peer-connector.js';
-import { serverName, socketGetParams } from '../../data/settings.js';
+import { socketGetParams } from '../../data/settings.js';
 
 class ConnectionService {
   #peerConnection = null;
@@ -38,7 +38,8 @@ class ConnectionService {
 
   createConnection() {
     this.peerConnection.create();
-    this.#socket.create(`${serverName}?${this.socketParams}`);
+    const ip = window.location.hostname;
+    this.#socket.create(`ws://${ip}:9000/?${this.socketParams}`);
   }
 
   closeConnect() {

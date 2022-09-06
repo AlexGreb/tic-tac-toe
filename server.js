@@ -1,7 +1,7 @@
 import { messageType } from './js/data/settings.js';
-import WebSocket from 'ws';
+import { WebSocketServer } from 'ws';
 
-const wsServer = new WebSocket.Server({ port: 9000 });
+const wsServer = new WebSocketServer({ port: 9000 });
 wsServer.on('connection', onConnect);
 const wsClients = new Map();
 let countId = 1;

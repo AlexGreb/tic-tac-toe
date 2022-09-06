@@ -126,6 +126,3 @@ export const settingsOnlineGame = {
 export const colorLineGrid = `blue`;
 
 export const serverName = `ws://192.168.1.49:9000/`;
-
-//export const serverName = `ws://192.168.2.100:9000/`;
-//export const serverName = `ws://192.168.2.100:9000/`;
