@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  web-ui:
+    container_name: web-ui
+    image: ${REGISTRY:-alexgreb}/tic-tac-toe:${TAG:-latest}
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:80"
